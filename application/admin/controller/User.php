@@ -79,9 +79,9 @@ class User extends BasicAdmin {
      * 用户密码修改
      */
     public function pass() {
-        if (in_array('10000', explode(',', $this->request->post('id')))) {
-            $this->error('系统超级账号禁止操作！');
-        }
+//        if (in_array('10000', explode(',', $this->request->post('id')))) {
+//            $this->error('系统超级账号禁止操作！');
+//        }
         if ($this->request->isGet()) {
             $this->assign('verify', false);
             return $this->_form($this->table, 'pass');
@@ -133,9 +133,9 @@ class User extends BasicAdmin {
      * 用户禁用
      */
     public function forbid() {
-        if (in_array('10000', explode(',', $this->request->post('id')))) {
-            $this->error('系统超级账号禁止操作！');
-        }
+//        if (in_array('10000', explode(',', $this->request->post('id')))) {
+//            $this->error('系统超级账号禁止操作！');
+//        }
         if (DataService::update($this->table)) {
             $this->success("用户禁用成功！", '');
         }
