@@ -393,7 +393,7 @@ class Query
             }
             $cursor = $this->field($field)->fetchCursor(true)->select();
             $cursor->setTypeMap(['root' => 'array']);
-            $resultSet = $cursor->toArray();
+
             if ($resultSet) {
                 $fields = array_keys($resultSet[0]);
                 $count  = count($fields);

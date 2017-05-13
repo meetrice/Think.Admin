@@ -18,6 +18,7 @@ use controller\BasicAdmin;
 use service\DataService;
 use service\NodeService;
 use service\ToolsService;
+use service\DbService;
 use think\Db;
 
 /**
@@ -27,7 +28,8 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/15 18:13
  */
-class Codegen extends BasicAdmin {
+class Codegen extends BasicAdmin
+{
 
     /**
      * 默认数据模型
@@ -38,106 +40,90 @@ class Codegen extends BasicAdmin {
     /**
      * 权限列表
      */
-    public function index() {
-        $this->title = '系统权限管理';
-        parent::_list($this->table);
+    public function index()
+    {
+
+        //得到所有的数据库
+        $databases = Db::query('show databases');
+        $tables = Db::query('SHOW TABLES');
+        $table_k = 'Tables_in_xiaoma';
+//var_dump($databases);die;
+//        $this->assign('databases',$databases);
+        $this->assign('tables', $tables);
+        $this->assign('table_k', $table_k);
+        return view();
     }
 
-    /**
-     * 权限授权
-     * @return string|array
-     */
-    public function apply() {
-        $auth_id = $this->request->get('id', '0');
-        switch (strtolower($this->request->get('action', '0'))) {
-            case 'getnode':
-                $nodes = NodeService::get();
-                $checked = Db::name('SystemAuthNode')->where('auth', $auth_id)->column('node');
-                foreach ($nodes as $key => &$node) {
-                    $node['checked'] = in_array($node['node'], $checked);
-                    if (empty($node['is_auth']) && substr_count($node['node'], '/') > 1) {
-                        unset($nodes[$key]);
-                    }
-                }
-                $this->success('获取节点成功！', '', $this->_filterNodes($this->_filterNodes(ToolsService::arr2tree($nodes, 'node', 'pnode', '_sub_'))));
-                break;
-            case 'save':
-                $data = [];
-                $post = $this->request->post();
-                foreach (isset($post['nodes']) ? $post['nodes'] : [] as $node) {
-                    $data[] = ['auth' => $auth_id, 'node' => $node];
-                }
-                Db::name('SystemAuthNode')->where('auth', $auth_id)->delete();
-                Db::name('SystemAuthNode')->insertAll($data);
-                $this->success('节点授权更新成功！', '');
-                break;
-            default :
-                $this->assign('title', '节点授权');
-                return $this->_form($this->table, 'apply');
+
+    //生成
+    public function generate()
+    {
+        //需要处理的文件
+        $path = '../template/default';
+        $files = array(
+            'admin' => array(
+                'controller' => '/admin/controller/Base.php', //1 控制器模型
+            ),
+            'view' => array(
+                'index' => '/admin/view/index.html',// 列表视图
+            ),
+        );
+
+        $table = $this->request->post('id');
+        if (!isset($table) || empty($table)) {
+            return $this->error('请选择数据表');
         }
-    }
 
-    /**
-     * 节点数据拼装
-     * @param array $nodes
-     * @param int $level
-     * @return array
-     */
-    protected function _filterNodes($nodes, $level = 1) {
-        foreach ($nodes as $key => &$node) {
-            if (!empty($node['_sub_']) && is_array($node['_sub_'])) {
-                $node['_sub_'] = $this->_filterNodes($node['_sub_'], $level + 1);
-            } elseif ($level < 3) {
-                unset($nodes[$key]);
-            }
+        $tabletatus = Db::query('SHOW TABLE STATUS WHERE Name =  "'.$table.'"');
+
+        //得到字段元数据
+        $columns = DbService::getTableColumn($table);
+
+        $filetarget = '/mnt/www/web/ma_yaodianqudao_com/public_html/application';//生成目标路径
+
+
+        $template_listview = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/view/index.html';//视图模板路径
+        $template_formview = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/view/form.html';//视图模板路径
+        $template_controller = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/controller/Base.php.html';//控制器模板路径
+
+        $this->assign('tableInfoArray', $columns); //列数据
+        $this->assign('tableComment', $tabletatus[0]['Comment']);//得到表名注释
+
+        $this->assign('tbname', ucfirst($table)); //列数据
+        $this->assign('tbcomment', $tabletatus[0]['Comment']); //列数据
+
+//        var_dump(json_decode('{"test":"1234"}',true)['test']);die;
+
+        $listview_content = $this->fetch($template_listview);//列表视图
+        $formview_content = $this->fetch($template_formview);//表单视图
+        $formview_content = str_replace('[SELF]', '__SELF__', $formview_content);//表单视图中特殊处理
+
+        $filename = basename($template_listview);
+        $formfilename = basename($template_formview);
+
+        //生成主列表视图
+        if ((is_dir($filetarget) || mkdir($filetarget)) && (is_dir($filetarget . '/admin/') || mkdir($filetarget . '/admin/')) && (is_dir($filetarget . '/admin/view') || mkdir($filetarget . '/admin/view'))) {
+            file_put_contents($filetarget . '/admin/view/' . lcfirst($table) . '.' . $filename, $listview_content);
         }
-        return $nodes;
-    }
 
-    /**
-     * 权限添加
-     */
-    public function add() {
-        return $this->_form($this->table, 'form');
-    }
-
-    /**
-     * 权限编辑
-     */
-    public function edit() {
-        return $this->_form($this->table, 'form');
-    }
-
-    /**
-     * 权限禁用
-     */
-    public function forbid() {
-        if (DataService::update($this->table)) {
-            $this->success("权限禁用成功！", '');
+        //生成表单视图
+        if ((is_dir($filetarget) || mkdir($filetarget)) && (is_dir($filetarget . '/admin/') || mkdir($filetarget . '/admin/')) && (is_dir($filetarget . '/admin/view') || mkdir($filetarget . '/admin/view'))) {
+            file_put_contents($filetarget . '/admin/view/' . lcfirst($table) . '.' . $formfilename, $formview_content);
         }
-        $this->error("权限禁用失败，请稍候再试！");
+
+        //生成控制器
+        $controller_content = $this->fetch($template_controller);//列表视图
+//        var_dump($controller_content);die;
+
+//        $controller_content = file_get_contents($template_controller);
+        $controller_content = str_replace('[php]', '<?php', $controller_content);
+        if ((is_dir($filetarget) || mkdir($filetarget)) && (is_dir($filetarget . '/admin/') || mkdir($filetarget . '/admin/')) && (is_dir($filetarget . '/admin/controller') || mkdir($filetarget . '/admin/controller'))) {
+            file_put_contents($filetarget . '/admin/controller/' . ucfirst($table) . '.php', $controller_content);
+        }
+        $this->success("生成成功！", '');
+//        $this->error("权限删除失败，请稍候再试！");
     }
 
-    /**
-     * 权限恢复
-     */
-    public function resume() {
-        if (DataService::update($this->table)) {
-            $this->success("权限启用成功！", '');
-        }
-        $this->error("权限启用失败，请稍候再试！");
-    }
 
-    /**
-     * 权限删除
-     */
-    public function del() {
-        if (DataService::update($this->table)) {
-            $id = $this->request->post('id');
-            Db::name('SystemAuthNode')->where('auth', $id)->delete();
-            $this->success("权限删除成功！", '');
-        }
-        $this->error("权限删除失败，请稍候再试！");
-    }
 
 }

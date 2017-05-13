@@ -1,0 +1,46 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="[SELF]" data-auto="true" method="post">
+{volist name="tableInfoArray" id="vo"}
+    {if condition="$vo['COLUMN_NAME'] neq 'id' "}
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']} </label>
+        <div class="layui-input-block">
+            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+            {if condition="$fieldtype eq 'select' "}
+                {assign name="seldict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+                {assign name="dicts" value = "$seldict|GetDict=###"}
+            <select name="{$vo['COLUMN_NAME']}" class='layui-select full-width' style='display:block'>
+                <option value="">---</option>
+
+
+                <!--{literal}{volist name="dicts" id="vod"}{/literal}-->
+                <!--{literal}{eq name='vod.dkey|intval=###' value='$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=-1|intval=###'}{/literal}-->
+                <option selected value='{literal}{$vod['dkey']}{/literal}'>{literal}{$vod['dvalue']}{/literal}</option>
+                <!--{literal}{else}{/literal}-->
+                <option  value='{literal}{$vod['dkey']}{/literal}'>{literal}{$vod['dvalue']}{/literal}</option>
+                <!--{literal}{/eq}{/literal}-->
+                <!--{literal}{/volist}{/literal}-->
+
+
+            </select>
+
+            {else/}
+            <input type="text" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}" placeholder="请输入{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}" class="layui-input">
+            {/if}
+        </div>
+    </div>
+
+
+    {/if}
+{/volist}
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {literal}{if isset($vo['id'])}{/literal}<input type='hidden' value='{literal}{$vo.id}{/literal}' name='id'/>{literal}{/if}{/literal}
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>

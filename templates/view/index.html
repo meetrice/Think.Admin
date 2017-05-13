@@ -1,0 +1,80 @@
+{literal}{extend name='extra@admin/content'}{/literal}
+
+{literal}{block name="button"}{/literal}
+<div class="nowrap pull-right" style="margin-top:10px">
+    <button data-modal='{literal}{:url("$classuri/add")}{/literal}' data-title="添加{$tableComment}" class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加{$tableComment}</button>
+    <button data-update data-field='delete' data-action='{literal}{:url("$classuri/del")}{/literal}' class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除{$tableComment}</button>
+</div>
+{literal}{/block}{/literal}
+
+    {literal}{block name="content"}{/literal}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <input type="hidden" value="resort" name="action"/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+            </th>
+            <th class='list-table-sort-td'>
+                <button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
+            </th>
+            {volist name="tableInfoArray" id="vo"}
+            <th class='text-center'>{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']} </th>
+            {/volist}
+            <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {literal}{foreach $list as $key=>$vo}{/literal}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{literal}{$vo.id}{/literal}' type='checkbox'/>
+            </td>
+            <td class='list-table-sort-td'>
+                <input name="_{literal}{$vo.id}{/literal}" value="{literal}{$vo.sort}{/literal}" class="list-sort-input"/>
+            </td>
+            <!--显示数据列：如果列类型是select ,则显示字典值-->
+            {volist name="tableInfoArray" id="vo"}
+            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+
+                {if condition="$fieldtype eq 'select' "}
+                    {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+            <td class='text-center'>
+                {literal}{${/literal}{$fielddict}{literal}dicts[$vo.{/literal}{$vo['COLUMN_NAME']}{literal}]}{/literal}
+            </td>
+                {else/}
+            <td class='text-center'>{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}}{/literal}</td>
+                {/if}
+
+            {/volist}
+            <td class='text-center nowrap'>
+
+
+                {literal}{if auth("$classuri/edit")}{/literal}
+                <span class="text-explode">|</span>
+                <a data-modal='{literal}{:url("$classuri/edit")}{/literal}?id={literal}{$vo.id}{/literal}' href="javascript:void(0)">编辑</a>
+                {literal}{/if}{/literal}
+
+
+                {literal}{if $vo.status eq 1 and auth("$classuri/forbid")}{/literal}
+                <span class="text-explode">|</span>
+                <a data-update="{literal}{$vo.id}{/literal}" data-field='status' data-value='0'data-action='{literal}{:url("$classuri/forbid")}{/literal}' href="javascript:void(0)">禁用</a>
+                {literal}{elseif auth("$classuri/resume")}{/literal}
+                <span class="text-explode">|</span>
+                <a data-update="{literal}{$vo.id}{/literal}" data-field='status' data-value='1' data-action='{literal}{:url("$classuri/resume")}{/literal}' href="javascript:void(0)">启用</a>
+                {literal}{/if}{/literal}
+
+                {literal}{if auth("$classuri/del")}{/literal}
+                <span class="text-explode">|</span>
+                <a data-update="{literal}{$vo.id}{/literal}" data-field='delete' data-action='{literal}{:url("$classuri/del")}{/literal}' href="javascript:void(0)">删除</a>
+                {literal}{/if}{/literal}
+
+            </td>
+        </tr>
+        {literal}{/foreach}{/literal}
+        </tbody>
+    </table>
+    {literal}{if isset($page)}{/literal}<p>{literal}{$page}{/literal}</p>{literal}{/if}{/literal}
+</form>
+{literal}{/block}{/literal}

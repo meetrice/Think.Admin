@@ -124,3 +124,14 @@ if (!function_exists("array_column")) {
     }
 
 }
+
+function GetDict($dicttype)
+{
+
+
+    $dicts=Db::name('dict')->where('type', $dicttype)->select();
+
+    return $dicts;
+//    return 'testddddd';
+
+}
