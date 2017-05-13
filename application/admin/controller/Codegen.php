@@ -58,17 +58,6 @@ class Codegen extends BasicAdmin
     //生成
     public function generate()
     {
-        //需要处理的文件
-        $path = '../template/default';
-        $files = array(
-            'admin' => array(
-                'controller' => '/admin/controller/Base.php', //1 控制器模型
-            ),
-            'view' => array(
-                'index' => '/admin/view/index.html',// 列表视图
-            ),
-        );
-
         $table = $this->request->post('id');
         if (!isset($table) || empty($table)) {
             return $this->error('请选择数据表');
@@ -91,7 +80,6 @@ class Codegen extends BasicAdmin
         $this->assign('tbname', ucfirst($table)); //列数据
         $this->assign('tbcomment', $tabletatus[0]['Comment']); //列数据
 
-//        var_dump(json_decode('{"test":"1234"}',true)['test']);die;
 
         $listview_content = $this->fetch($template_listview);//列表视图
         $formview_content = $this->fetch($template_formview);//表单视图
@@ -112,15 +100,12 @@ class Codegen extends BasicAdmin
 
         //生成控制器
         $controller_content = $this->fetch($template_controller);//列表视图
-//        var_dump($controller_content);die;
 
-//        $controller_content = file_get_contents($template_controller);
         $controller_content = str_replace('[php]', '<?php', $controller_content);
         if ((is_dir($filetarget) || mkdir($filetarget)) && (is_dir($filetarget . '/admin/') || mkdir($filetarget . '/admin/')) && (is_dir($filetarget . '/admin/controller') || mkdir($filetarget . '/admin/controller'))) {
             file_put_contents($filetarget . '/admin/controller/' . ucfirst($table) . '.php', $controller_content);
         }
         $this->success("生成成功！", '');
-//        $this->error("权限删除失败，请稍候再试！");
     }
 
 
