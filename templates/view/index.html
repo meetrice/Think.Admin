@@ -20,7 +20,10 @@
                 <button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
             </th>
             {volist name="tableInfoArray" id="vo"}
+            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+            {if condition="$fieldtype neq 'hidden' "}
             <th class='text-center'>{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']} </th>
+            {/if}
             {/volist}
             <th class='text-center'>操作</th>
         </tr>
@@ -37,16 +40,16 @@
             <!--显示数据列：如果列类型是select ,则显示字典值-->
             {volist name="tableInfoArray" id="vo"}
             {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
-
-                {if condition="$fieldtype eq 'select' "}
+            {if condition="$fieldtype neq 'hidden' "}
+                {if condition="$fieldtype eq 'select' ||$fieldtype eq 'radio'"}
                     {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
             <td class='text-center'>
-                {literal}{${/literal}{$fielddict}{literal}dicts[$vo.{/literal}{$vo['COLUMN_NAME']}{literal}]}{/literal}
+                {literal}{${/literal}{$fielddict}{literal}dicts[$vo.{/literal}{$vo['COLUMN_NAME']}{literal}]|default=''}{/literal}
             </td>
                 {else/}
-            <td class='text-center'>{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}}{/literal}</td>
+            <td class='text-center'>{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=''}{/literal}</td>
                 {/if}
-
+            {/if}
             {/volist}
             <td class='text-center nowrap'>
 

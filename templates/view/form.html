@@ -1,32 +1,79 @@
+{literal}{extend name="extra@admin/content"}{/literal}
+
+{literal}{block name="content"}{/literal}
 <form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="[SELF]" data-auto="true" method="post">
 {volist name="tableInfoArray" id="vo"}
+    <!--字段列头显示名称-->
+    {assign name="displayname" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['name']"}
+    <!--是否必填-->
+    {if condition="stripos($vo['COLUMN_COMMENT'], 'require') gt 0"}
+        {assign name="required" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['require']"}
+    {else/}
+        {assign name="required" value="0"}
+    {/if}
+    <!--验证类型-->
+    {if condition="stripos($vo['COLUMN_COMMENT'], 'validate') gt 0"}
+    {assign name="validate" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['validate']"}
+    {else/}
+    {assign name="validate" value=""}
+    {/if}
+    <!--字典名称-->
+    {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
+    {assign name="dict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+    {else/}
+    {assign name="dict" value=""}
+    {/if}
+
     {if condition="$vo['COLUMN_NAME'] neq 'id' "}
 
+    {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
 
     <div class="layui-form-item">
-        <label class="layui-form-label">{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']} </label>
+        {if condition="$fieldtype neq 'hidden' "}
+        <label class="layui-form-label">{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}  </label>
+        {/if}
         <div class="layui-input-block">
-            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+
+            <!--如果是下拉选框-->
             {if condition="$fieldtype eq 'select' "}
-                {assign name="seldict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
-                {assign name="dicts" value = "$seldict|GetDict=###"}
-            <select name="{$vo['COLUMN_NAME']}" class='layui-select full-width' style='display:block'>
+            <select name="{$vo['COLUMN_NAME']}" class='layui-select full-width'>
                 <option value="">---</option>
-
-
-                <!--{literal}{volist name="dicts" id="vod"}{/literal}-->
+                <!--{literal}{volist name="{/literal}{$dict}{literal}dicts" id="vod"}{/literal}-->
                 <!--{literal}{eq name='vod.dkey|intval=###' value='$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=-1|intval=###'}{/literal}-->
                 <option selected value='{literal}{$vod['dkey']}{/literal}'>{literal}{$vod['dvalue']}{/literal}</option>
                 <!--{literal}{else}{/literal}-->
                 <option  value='{literal}{$vod['dkey']}{/literal}'>{literal}{$vod['dvalue']}{/literal}</option>
                 <!--{literal}{/eq}{/literal}-->
                 <!--{literal}{/volist}{/literal}-->
-
-
             </select>
-
+            <!--如果是radio选框-->
+            {elseif condition="$fieldtype eq 'radio' " /}
+            <!--{literal}{volist name="{/literal}{$dict}{literal}dicts" id="vod"}{/literal}-->
+            <!--{literal}{eq name='vod.dkey|intval=###' value='$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=-1|intval=###'}{/literal}-->
+            <input type="radio" name="{$vo['COLUMN_NAME']}" value="{literal}{$vod['dkey']}{/literal}" title="{literal}{$vod['dvalue']}{/literal}" checked>
+            <!--{literal}{else}{/literal}-->
+            <input type="radio" name="{$vo['COLUMN_NAME']}" value="{literal}{$vod['dkey']}{/literal}" title="{literal}{$vod['dvalue']}{/literal}">
+            <!--{literal}{/eq}{/literal}-->
+            <!--{literal}{/volist}{/literal}-->
+            <!--如果是checkbox选框-->
+            {elseif condition="$fieldtype eq 'checkbox' " /}
+            <!--{literal}{volist name="{/literal}{$dict}{literal}dicts" id="vod"}{/literal}-->
+            <!--{literal}{in name='vod.dkey|intval=###' value='$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=-1|explode=",",###'}{/literal}-->
+            <input type="checkbox" name="{$vo['COLUMN_NAME']}[{literal}{$vod['dkey']}{/literal}]" value="{literal}{$vod['dkey']}{/literal}" title="{literal}{$vod['dvalue']}{/literal}" checked>
+            <!--{literal}{else}{/literal}-->
+            <input type="checkbox" name="{$vo['COLUMN_NAME']}[{literal}{$vod['dkey']}{/literal}]" value="{literal}{$vod['dkey']}{/literal}" title="{literal}{$vod['dvalue']}{/literal}">
+            <!--{literal}{/in}{/literal}-->
+            <!--{literal}{/volist}{/literal}-->
+            {elseif condition="$fieldtype eq 'textarea' " /}
+            <textarea {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} placeholder="请输入{$displayname}描述"   title="请输入{$displayname}描述" class="layui-textarea" name="{$vo['COLUMN_NAME']}">{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}</textarea>
+            {elseif condition="$fieldtype eq 'password' " /}
+            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="password" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
+            {elseif condition="$fieldtype eq 'switch' " /}
+            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="checkbox" name="{$vo['COLUMN_NAME']}"  title="请输入{$displayname}" placeholder="请输入{$displayname}" lay-skin="switch"  {literal}{if condition="!empty($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) && intval($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) eq '1' "}{/literal}checked{literal}{/if}{/literal}>
+            {elseif condition="$fieldtype eq 'hidden' " /}
+            <input  type="hidden" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  >
             {else/}
-            <input type="text" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}" placeholder="请输入{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}" class="layui-input">
+            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="text" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
             {/if}
         </div>
     </div>
@@ -39,8 +86,14 @@
 
     <div class="layui-form-item text-center">
         {literal}{if isset($vo['id'])}{/literal}<input type='hidden' value='{literal}{$vo.id}{/literal}' name='id'/>{literal}{/if}{/literal}
-        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn" lay-submit>保存数据</button>
         <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
     </div>
 
 </form>
+{literal}{/block}{/literal}
+{literal}{block name="script"}{/literal}
+<script>
+    form.render();
+</script>
+{literal}{/block}{/literal}

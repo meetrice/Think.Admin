@@ -22,21 +22,19 @@ use think\Db;
     * 列表
     */
     public function index() {
-{volist name="tableInfoArray" id="vo"}
-        {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
-        {if condition="$fieldtype eq 'select' "}
-            {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
-        ${$fielddict}array=[];
-        ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
-        foreach (${$fielddict}dicts as $vo) {
-        ${$fielddict}array[$vo['dkey']] = $vo['dvalue'];
-        }
-        $this->assign('{$fielddict}dicts', ${$fielddict}array); //字典
+    {volist name="tableInfoArray" id="vo"}
+            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+            {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
+                {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+            ${$fielddict}array=[];
+            ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
+            foreach (${$fielddict}dicts as $vo) {
+            ${$fielddict}array[$vo['dkey']] = $vo['dvalue'];
+            }
+            $this->assign('{$fielddict}dicts', ${$fielddict}array); //字典
 
-        {/if}
-{/volist}
-
-
+            {/if}
+    {/volist}
         $this->title = '管理{$tbcomment}';
         parent::_list($this->table);
     }
@@ -44,8 +42,18 @@ use think\Db;
     * 添加
     */
     public function add() {
-        $dicts=Db::name('dict')->where('type', 'sex')->select();
-        $this->assign('dicts', $dicts); //字典
+
+    {volist name="tableInfoArray" id="vo"}
+        {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+        {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
+        {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+
+        ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
+        $this->assign('{$fielddict}dicts', ${$fielddict}dicts); //字典
+
+        {/if}
+    {/volist}
+
         return $this->_form($this->table, 'form');
     }
 
@@ -53,8 +61,16 @@ use think\Db;
     * 编辑
     */
     public function edit() {
-        $dicts=Db::name('dict')->where('type', 'sex')->select();
-        $this->assign('dicts', $dicts); //字典
+    {volist name="tableInfoArray" id="vo"}
+    {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+    {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
+    {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+
+    ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
+    $this->assign('{$fielddict}dicts', ${$fielddict}dicts); //字典
+
+    {/if}
+    {/volist}
         return $this->_form($this->table, 'form');
     }
 
@@ -90,6 +106,33 @@ use think\Db;
         $this->success("{$tbcomment}启用成功！", '');
         }
         $this->error("{$tbcomment}启用失败，请稍候再试！");
+    }
+
+    /**
+    * 表单数据默认处理
+    * @param array $data
+    */
+    public function _form_filter(&$data) {
+        if ($this->request->isPost()) {
+
+
+        {volist name="tableInfoArray" id="vo"}
+            {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
+            {if condition="$fieldtype eq 'checkbox'"}
+    if (isset($data['{$vo['COLUMN_NAME']}']) && is_array($data['{$vo['COLUMN_NAME']}'])) {
+                $data['{$vo['COLUMN_NAME']}'] = join(',', $data['{$vo['COLUMN_NAME']}']);
+                }
+            {elseif condition="$fieldtype eq 'switch' " /}
+    if(isset($data['{$vo['COLUMN_NAME']}']) && $data['{$vo['COLUMN_NAME']}']=='on'){
+                    $data['{$vo['COLUMN_NAME']}']=1;
+                }else{
+                    $data['{$vo['COLUMN_NAME']}']=0;
+                }
+            {/if}
+        {/volist}
+
+
+        }
     }
 
 }
