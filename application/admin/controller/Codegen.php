@@ -79,12 +79,11 @@ class Codegen extends BasicAdmin
         //得到字段元数据
         $columns = DbService::getTableColumn($table);
 
-        $filetarget = '/mnt/www/web/ma_yaodianqudao_com/public_html/application';//生成目标路径
+        $filetarget = $_SERVER['DOCUMENT_ROOT'].'/application';//生成目标路径
 
-
-        $template_listview = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/view/index.html';//视图模板路径
-        $template_formview = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/view/form.html';//视图模板路径
-        $template_controller = '/mnt/www/web/ma_yaodianqudao_com/public_html/templates/controller/Base.php.html';//控制器模板路径
+        $template_listview = $_SERVER['DOCUMENT_ROOT'].'/templates/view/index.html';//视图模板路径
+        $template_formview = $_SERVER['DOCUMENT_ROOT'].'/templates/view/form.html';//视图模板路径
+        $template_controller = $_SERVER['DOCUMENT_ROOT'].'/templates/controller/Base.php.html';//控制器模板路径
 
         $this->assign('tableInfoArray', $columns); //列数据
         $this->assign('tableComment', $tabletatus[0]['Comment']);//得到表名注释
