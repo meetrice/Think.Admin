@@ -83,7 +83,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <label style="color:#aaa">摘要选填，如果不填写会默认抓取正文前54个字</label>
-                    <textarea name="digest" class="layui-input" style="height:80px;resize:none;"></textarea>
+                    <textarea name="digest" class="layui-input" style="height:80px;resize:none;line-height:20px"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -166,10 +166,12 @@
                     // 处理上一个编辑器
                     if ($form && $pItem && $pItem.size() > 0) {
                         var data = {};
+                        data.id = $form.find('[name=id]').val();
                         data.title = $form.find('[name=title]').val();
                         data.local_url = $form.find('[name=local_url]').val();
                         data.content = editor.getContent() || '';
                         data.author = $form.find('[name=author]').val();
+                        data.digest = $form.find('[name=digest]').val();
                         data.show_cover_pic = $form.find('[name="show_cover_pic"]').get(0).checked ? 1 : 0;
                         $form.find('[name=local_url]').trigger('change');
                         $pItem.data('item', data), $form.submit();
@@ -188,10 +190,12 @@
                     $item = $('.news-item.active');
                     this.get = function () {
                         var data = $item.data('item') || {};
+                        data.id = data.id || 0;
                         data.title = data.title || '';
                         data.local_url = data.local_url || '__PUBLIC__/static/plugs/uploader/theme/image.png';
                         data.content = data.content || '';
                         data.author = data.author || '';
+                        data.digest = data.digest || '';
                         data.show_cover_pic = data.show_cover_pic || 0;
                         return data;
                     };

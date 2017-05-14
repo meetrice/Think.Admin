@@ -14,15 +14,14 @@
 
 namespace app\wechat\controller;
 
-use Exception;
-use think\Db;
-use think\Log;
-use think\response\View;
 use controller\BasicAdmin;
 use service\DataService;
 use service\FileService;
 use service\LogService;
 use service\WechatService;
+use think\Db;
+use think\Log;
+use think\response\View;
 
 /**
  * 微信图文管理
@@ -37,22 +36,22 @@ class News extends BasicAdmin {
      * 设置默认操作表
      * @var string
      */
-    protected $table = 'WechatNews';
+    public $table = 'WechatNews';
 
     /**
      * 图文列表
      */
     public function index() {
         $this->assign('title', '图文列表');
-        $db = Db::name($this->table)->order('id desc');
-        parent::_list($db);
+        $db = Db::name($this->table)->where('is_deleted', '0')->order('id desc');
+        return parent::_list($db);
     }
 
     /**
      * 图文列表数据处理
      * @param $data
      */
-    protected function _index_data_filter(&$data) {
+    protected function _data_filter(&$data) {
         foreach ($data as &$vo) {
             $vo = WechatService::getNewsById($vo['id']);
         }
@@ -109,7 +108,7 @@ class News extends BasicAdmin {
         foreach ($data as &$vo) {
             $vo['create_by'] = session('user.id');
             $vo['create_at'] = date('Y-m-d H:i:s');
-            $vo['digest'] = empty($vo['digest']) ? mb_substr(strip_tags($vo['content']), 0, 120) : $vo['digest'];
+            $vo['digest'] = empty($vo['digest']) ? mb_substr(strip_tags(str_replace(["\s", '　'], '', $vo['content'])), 0, 120) : $vo['digest'];
             if (empty($vo['id'])) {
                 $result = $id = Db::name('WechatNewsArticle')->insertGetId($vo);
             } else {
@@ -124,26 +123,13 @@ class News extends BasicAdmin {
     }
 
     /**
-     * 删除图文
+     * 删除用户
      */
     public function del() {
-        $id = $this->request->post('id', '');
-        empty($id) && $this->error('参数错误，请重新操作删除!');
-        $info = Db::name('WechatNews')->where('id', $id)->find();
-        empty($info) && $this->error('删除的记录不存在，请重新操作删除!');
-        if (isset($info['article_id'])) {
-            Db::startTrans();
-            try {
-                Db::name('WechatNewsArticle')->where('id', 'in', explode(',', $info['article_id']))->delete();
-                Db::name('WechatNews')->where('id', $id)->delete();
-                Db::commit();
-                $isSuccess = true;
-            } catch (Exception $e) {
-                Db::rollback();
-            }
-            (isset($isSuccess) && $isSuccess) && $this->success('图文删除成功!');
+        if (DataService::update($this->table)) {
+            $this->success("图文删除成功!", '');
         }
-        $this->error('图文删除失败，请重新再试!');
+        $this->error("图文删除失败, 请稍候再试!");
     }
 
     /**
@@ -151,7 +137,7 @@ class News extends BasicAdmin {
      * @return string
      */
     public function select() {
-        return '开发中';
+        $this->index();
     }
 
     /**
