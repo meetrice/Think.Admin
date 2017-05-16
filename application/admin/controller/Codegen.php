@@ -47,11 +47,98 @@ class Codegen extends BasicAdmin
         $databases = Db::query('show databases');
         $tables = Db::query('SHOW TABLES');
         $table_k = 'Tables_in_xiaoma';
-//var_dump($databases);die;
-//        $this->assign('databases',$databases);
+
+        $tablename = $this->request->get('id');
+        $columns = array();
+        $info = DB::query("SHOW TABLE STATUS FROM `" . config('database.database') . "` WHERE `name` = '" . $tablename . "'");
+
+//        var_dump($info);die;
+        if(count($info)>=1)
+        {
+            $info = $info[0];
+        }
+        if($tablename != null)
+        {
+            foreach(DB::query("SHOW FULL COLUMNS FROM `$tablename`") as $column)
+            {
+                // echo '<pre>';print_r($column);echo '</pre>';
+                $columns[] = $column;
+            }
+        }
+        $isno = array(
+            "1" => "是",
+            "0" => "否",
+            "" => "否",
+        );
+
+//        var_dump($columns);die;
+        $this->assign('default', array('NULL','USER_DEFINED','CURRENT_TIMESTAMP'));
+        $this->assign('tbtypes', array('bigint','binary','bit','blob','bool','boolean','char','date','datetime','decimal','double','enum','float','int','longblob','longtext','mediumblob','mediuminit','mediumtext','numerice','real','set','smallint','text','time','timestamp','tinyblob','tinyint','tinytext','varbinary','varchar','year'));
+        $this->assign('engine', array('MyISAM','InnoDB'));
+
+        $this->assign('isno', $isno);
+        $this->assign('info', $info);
+        $this->assign('columns', $columns);
         $this->assign('tables', $tables);
         $this->assign('table_k', $table_k);
         return view();
+    }
+    /**
+     * 编辑
+     */
+    public function editcolumn() {
+
+        $field = $this->request->get('field');
+        $type = $this->request->get('type');
+        $lenght = $this->request->get('lenght');
+        $default = $this->request->get('default');
+        $notnull = $this->request->get('notnull');
+        $key = $this->request->get('key');
+        $ai = $this->request->get('ai');
+        $required = $this->request->get('required');
+        $displayname = $this->request->get('displayname');
+        $formtype = $this->request->get('formtype');
+        $validate = $this->request->get('validate');
+        $dict = $this->request->get('dict');
+        $isgrid = $this->request->get('isgrid');
+        $isform = $this->request->get('isform');
+
+        $this->assign('field', $field);
+        $this->assign('type', $type);
+        $this->assign('lenght', $lenght);
+        $this->assign('default', $default);
+        $this->assign('notnull', $notnull);
+        $this->assign('key', $key);
+        $this->assign('ai', $ai);
+        $this->assign('required', $required);
+        $this->assign('displayname', $displayname);
+        $this->assign('formtype', $formtype);
+        $this->assign('validate', $validate);
+        $this->assign('dict', $dict);
+        $this->assign('isgrid', $isgrid);
+        $this->assign('isform', $isform);
+
+        $dicttypes=Db::name('dict')->where('status', '1')->field('type')->distinct("type")->select();
+        $this->assign('dicttypes', $dicttypes); //字典
+
+        $fieldtypes = array('bigint','binary','bit','blob','bool','boolean','char','date','datetime','decimal','double','enum','float','int','longblob','longtext','mediumblob','mediuminit','mediumtext','numerice','real','set','smallint','text','time','timestamp','tinyblob','tinyint','tinytext','varbinary','varchar','year');
+        $this->assign('fieldtypes', $fieldtypes);
+
+        $fieldformtypes = array(
+            "input" => "input",
+            "select" => "select",
+            "checkbox" => "checkbox",
+        );
+        $this->assign('fieldformtypes', $fieldformtypes);
+
+
+        $validatetypes = array(
+            "email" => "email",
+            "url" => "url",
+        );
+        $this->assign('validatetypes', $validatetypes);
+
+        return $this->_form($this->table, 'form');
     }
 
 

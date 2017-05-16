@@ -2,36 +2,235 @@
 {block name="content"}
 
 
+<div >
+    <div class="col-md-3">
 
 
-<table class="table table-hover">
-    <tr>
-        <th class='list-table-check-td'>
-            <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
-        </th>
+        <table class="table table-hover">
+            <tr>
+                <th class='list-table-check-td'>
+                    <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+                </th>
 
-        <th class='text-center'>选择</th>
-        <th class='text-center'>数据表</th>
-        <th class='text-center'>操作</th>
-    </tr>
-{volist name="tables" id="vo"}
-<tr>
-    <td class='list-table-check-td'>
-        <input  class="list-check-box" name="tables[]" value="<?php echo $vo[$table_k];?>" type="checkbox">
-    </td>
-    <td class='list-table-sort-td'>
-    </td>
-    <td class='text-center'><?php echo $vo[$table_k];?></td>
-    <td  class='text-center'>
-        <a data-update="<?php echo $vo[$table_k];?>" data-field='delete' data-action='{:url("$classuri/generate")}' href="javascript:void(0)">生成</a>
-    </td>
-</tr>
-{/volist}
-</table>
+                <th class='text-center'>数据表</th>
+                <th class='text-center'>操作</th>
+            </tr>
+            {volist name="tables" id="vo"}
+            <tr>
+                <td class='list-table-check-td'>
+                    <input class="list-check-box" name="tables[]" value="<?php echo $vo[$table_k];?>" type="checkbox">
+                </td>
+
+                <td class='text-center'> <a data-open="{:url('index')}?id={$vo[$table_k]}"><?php echo $vo[$table_k];?></a></td>
+                <td class='text-center'>
+                    <a data-update="<?php echo $vo[$table_k];?>" data-field='delete'
+                       data-action='{:url("$classuri/generate")}' href="javascript:void(0)">生成</a>
+                </td>
+            </tr>
+            {/volist}
+        </table>
+
+    </div>
 
 
+    <!--                                    右主面板开始                                          -->
+    <div class="col-md-9">
+
+        {if isset($info['Name'])}
+
+        <div class="form-group" style="margin-top:30px;">
+            <label class="col-md-3">表名</label>
+            <div class="col-md-9">
+                <input type="text" name="table_name" required="true"
+                       value="<?php if(isset($info['Name'])) echo $info['Name'];?>" class="form-control">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:30px;">
+            <label class="col-md-3"> 存储引擎 </label>
+            <div class="col-md-9">
+                <select class="form-control" name="engine" required="true">
+                    {foreach $engine as $e}
+                    <option value="{$e}"
+                    <?php if(isset($info->Engine) && $info->Engine ==$e) echo 'selected';?> >{$e}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
 
 
+        <div class="form-group" style="top:30px;">
+            <label class="col-md-4"> </label>
+            <div class="col-md-8">
+                <button type="submit" class="layui-btn"> 修改</button>
+
+            </div>
+        </div>
+
+        <div style="clear:both;"></div>
+        <hr/>
+
+
+        <!--                                   表字段信息面板开始                                          -->
+
+        <div class="table-responsive" style="background:#fff;">
+            <table class="table table-striped" id="tables">
+                <thead>
+                <tr>
+
+                    <th> 列名</th>
+                    <th> 类型</th>
+                    <th> 长度</th>
+                    <th> 默认</th>
+
+                    <th width="75"> 不为空 ?</th>
+                    <th> 主键</th>
+                    <th> 自增</th>
+                    <th> 表头/Label</th>
+                    <th> 表单类型</th>
+                    <th> 是否必填</th>
+                    <th> 验证类型</th>
+                    <th> 字典名称</th>
+                    <th> 列表显示</th>
+                    <th> 表单显示</th>
+                    <th width="75"> 操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if count($columns) >=1}
+                {foreach $columns as $column}
+                <tr class="" id="field-{$column['Field']}">
+
+                    <td>{$column['Field']}</td>
+                    <td>
+                        <?php
+						$types = explode('(', $column['Type']);
+                        preg_match("/\((.*)\)/i", $column['Type'],$typeVal);
+                        $type = $types[0];
+                        $length = (isset($typeVal[1]))?$typeVal[1]:'';
+                        ?>
+                        {$type}
+
+                    </td>
+                    <td>{$length}</td>
+                    <td>
+                        {$column['Default']}
+                    </td>
+                    <td> {if $column['Null'] =='NO'}<i class="text-success fa fa-check-circle"></i> {else/} <i
+                            class="text-danger fa fa-minus-circle"></i> {/if}
+                    </td>
+                    <td>
+                        {if $column['Key'] =='PRI'} <i class="text-success fa fa-check-circle"></i> {else/} <i
+                            class="text-danger fa fa-minus-circle"></i> {/if}
+                    </td>
+                    <td>
+                        {if $column['Extra'] =='auto_increment'} <i class="text-success fa fa-check-circle"></i> {else/}
+                        <i class="text-danger fa fa-minus-circle"></i> {/if}
+                    </td>
+                    <!--表头列名-->
+                    {assign name="displayname" value=":json_decode($column['Comment'],true)[0]['name']"}
+                    <!--表单类型-->
+                    {assign name="formtype" value=":json_decode($column['Comment'],true)[0]['type']"}
+                    <!--是否必填-->
+                    {if condition="stripos($column['Comment'], 'require') gt 0"}
+                    {assign name="required" value=":json_decode($column['Comment'],true)[0]['require']"}
+                    {else/}
+                    {assign name="required" value="0"}
+                    {/if}
+                    <!--验证类型-->
+                    {if condition="stripos($column['Comment'], 'validate') gt 0"}
+                    {assign name="validate" value=":json_decode($column['Comment'],true)[0]['validate']"}
+                    {else/}
+                    {assign name="validate" value=""}
+                    {/if}
+                    <!--字典名称-->
+                    {if condition="stripos($column['Comment'], 'dict') gt 0"}
+                    {assign name="dict" value=":json_decode($column['Comment'],true)[0]['dict']"}
+                    {else/}
+                    {assign name="dict" value=""}
+                    {/if}
+                    <!--是否列表显示-->
+                    {if condition="stripos($column['Comment'], 'isgrid') gt 0"}
+                    {assign name="isgrid" value=":json_decode($column['Comment'],true)[0]['isgrid']"}
+                    {else/}
+                    {assign name="isgrid" value=""}
+                    {/if}
+                    <!--是否表单显示-->
+                    {if condition="stripos($column['Comment'], 'isform') gt 0"}
+                    {assign name="isform" value=":json_decode($column['Comment'],true)[0]['isform']"}
+                    {else/}
+                    {assign name="isform" value=""}
+                    {/if}
+                    
+                    <td> <span class="text-explode">|</span>{$displayname}</td>
+                    <td> <span class="text-explode">|</span>{$formtype}</td>
+                    <td>
+                        {if $required eq 1}
+
+                        <a data-open="{:url('index')}?id={$vo[$table_k]}">{$isno[$required]}</a>
+                        {else/}
+                        <span class="text-explode">|</span>
+                        <a data-open="{:url('index')}?id={$vo[$table_k]}">{$isno[$required]}</a>
+                        {/if}
+
+                        </td>
+                    <td> {$validate}</td>
+                    <td> {$dict}</td>
+                    <td> {$isno[$isgrid]}</td>
+                    <td> {$isno[$isform]}</td>
+                    <td>
+
+                        <?php
+                        $info = 'field='.$column['Field'].'&type='.$type.'&lenght='.$length.'&default='.$column['Default'].'&notnull='.$column['Null'].'&key='.$column['Key'].'&ai='.$column['Extra'].'&required='.$required.'&displayname='.$displayname.'&formtype='.$formtype.'&validate='.$validate.'&dict='.$dict.'&isgrid='.$isgrid.'&isform='.$isform;
+?>
+                        <a data-modal='{:url("$classuri/editcolumn")}?{$info}' href="javascript:void(0)" class="btn btn-xs btn-primary" ><i class="fa fa-edit "></i></a>
+
+                        <a href="" rel="" class="removedField  btn btn-xs btn-danger"><i class="fa fa-minus"></i></a>
+                    </td>
+
+                </tr>
+                {/foreach}
+
+                {else/}
+                <tr class="clone clonedInput">
+
+                    <td><input type="text" name="fields[]" value="" class="form-control" required="true"></td>
+                    <td>
+                        <select name="types[]" class="form-control">
+                            {foreach $tbtypes as $t}
+                            <option value="{$t}">{$t}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td>
+
+                        <input type="text" name="lenghts[]" value="" class="form-control"></td>
+                    <td>
+
+
+                        <input type="text" name="defaults[]" class="form-control"/>
+                    </td>
+
+                    <td><input type="checkbox" name="null[]" value="1"/></td>
+                    <td><input type="checkbox" name="key[]" value="1"/></td>
+                    <td><input type="checkbox" name="ai[]" value="1"/></td>
+                    <td>
+
+                        <a onclick=" $(this).parents('.clonedInput').remove(); return false" href="#"
+                           class="remove btn btn-xs btn-danger">-</a>
+                    </td>
+
+                </tr>
+
+                {/if}
+                </tbody>
+
+            </table>
+
+        </div>
+        {/if}
+
+    </div>
+</div>
 
 
 {/block}
