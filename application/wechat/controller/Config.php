@@ -108,10 +108,9 @@ class Config extends BasicAdmin {
         $data = $this->request->post();
         foreach ($data as $key => $vo) {
             if (in_array($key, ['wechat_cert_key_md5', 'wechat_cert_cert_md5']) && !empty($vo)) {
-                $filename = ROOT_PATH . 'public/upload/' . join('/', str_split($vo, 16)) . '.pem';
+                $filename = ROOT_PATH . 'static/upload/' . join('/', str_split($vo, 16)) . '.pem';
                 !file_exists($filename) && $this->error('支付双向证书上传失败，请重新上传！');
-                $keyname = str_replace('_md5', '', $key);
-                $data[$keyname] = $filename;
+                $data[str_replace('_md5', '', $key)] = $filename;
             }
         }
         unset($data['wechat_cert_key_md5'], $data['wechat_cert_cert_md5']);
