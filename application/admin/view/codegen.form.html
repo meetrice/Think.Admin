@@ -1,14 +1,16 @@
 {extend name='extra@admin/content'}
 
 {block name='content'}
-<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="__SELF__" data-auto="true" method="post">
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="{:url('save')}" data-auto="true" method="post">
 
 
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">列名</label>
             <div class="layui-input-inline">
-                <input required="required" lay-verify="name" type="text" name="name" value='{$field|default=""}'
+                <input required="required" lay-verify="name" type="text" name="field" value='{$field|default=""}'
+                       title="请输入列名" placeholder="请输入列名" class="layui-input">
+                <input type="hidden" name="currentfield" value='{$field|default=""}'
                        title="请输入列名" placeholder="请输入列名" class="layui-input">
             </div>
         </div>
@@ -16,7 +18,7 @@
             <label class="layui-form-label">类型</label>
             <div class="layui-input-inline">
 
-                <select name="depart" class='layui-select full-width'>
+                <select name="type" class='layui-select full-width'>
                     <option value="">---</option>
                     {foreach $fieldtypes as $vo}
                     <option value="{$vo}" {if $vo eq $type}selected{/if}>{$vo}</option>
@@ -32,14 +34,14 @@
         <div class="layui-inline">
             <label class="layui-form-label">长度</label>
             <div class="layui-input-inline">
-                <input required="required" lay-verify="name" type="text" name="name" value='{$lenght|default=""}'
+                <input  lay-verify="name" type="text" name="lenght" value='{$lenght|default=""}'
                        title="请输入长度" placeholder="请输入长度" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">默认值</label>
             <div class="layui-input-inline">
-                <input required="required" lay-verify="name" type="text" name="name" value='{$default|default=""}'
+                <input  lay-verify="name" type="text" name="default" value='{$default|default=""}'
                        title="请输入默认值" placeholder="请输入默认值" class="layui-input">
 
             </div>
@@ -48,33 +50,20 @@
 
 
     <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">主键</label>
-            <div class="layui-input-inline">
-                <input type="checkbox" name="recom"  lay-skin="switch" {if
-                       condition="!empty($key) && intval($key) eq '1' " }checked{/if}>
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">自增</label>
-            <div class="layui-input-inline">
-                <input type="checkbox" name="recom"  lay-skin="switch" {if
-                       condition="!empty($ai) && intval($ai) eq '1' " }checked{/if}>
 
-            </div>
-        </div>
+
         <div class="layui-inline">
-            <label class="layui-form-label">不为空</label>
+            <label class="layui-form-label">可空</label>
             <div class="layui-input-inline">
-                <input type="checkbox" name="recom" title="请输入推荐" placeholder="请输入推荐" lay-skin="switch" {if
-                       condition="!empty($notnull) && intval($notnull) eq '1' " }checked{/if}>
+                <input type="checkbox" name="null" lay-skin="switch" {if
+                       condition="!empty($notnull) && $notnull eq 'YES' " }checked{/if}>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">必填</label>
             <div class="layui-input-inline">
-                <input type="checkbox" name="recom"  lay-skin="switch" {if
-                       condition="!empty($required) && intval($required) eq '1' " }checked{/if}>
+                <input type="checkbox" name="require"  lay-skin="switch" {if
+                       condition="!empty($require) && intval($require) eq '1' " }checked{/if}>
             </div>
         </div>
     </div>
@@ -84,15 +73,15 @@
         <div class="layui-inline">
             <label class="layui-form-label">表头/lable </label>
             <div class="layui-input-inline">
-                <input required="required" lay-verify="name" type="text" name="name" value='{$displayname|default=""}'
+                <input required="required" lay-verify="name" type="text" name="displayname" value='{$displayname|default=""}'
                        title="请输入表头/lable " placeholder="请输入表头/lable " class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">表单类型</label>
             <div class="layui-input-inline">
-                <select name="depart" class='layui-select full-width'>
-                    <option value="">---</option>
+                <select name="formtype" class='layui-select full-width'>
+                    <option value=" ">---</option>
                     {foreach $fieldformtypes as $k=>$vo}
                     <option value="{$vo}" {if $vo eq $formtype}selected{/if}>{$vo}</option>
                     {/foreach}
@@ -105,8 +94,8 @@
         <div class="layui-inline">
             <label class="layui-form-label">验证类型</label>
             <div class="layui-input-inline">
-                <select name="depart" class='layui-select full-width'>
-                    <option value="">---</option>
+                <select name="validate" class='layui-select full-width'>
+                    <option value=" ">---</option>
                     {foreach $validatetypes as $k=>$vo}
                     <option value="{$vo}" {if $vo eq $validate}selected{/if}>{$vo}</option>
                     {/foreach}
@@ -118,8 +107,8 @@
         <div class="layui-inline">
             <label class="layui-form-label">字典名称</label>
             <div class="layui-input-inline">
-                <select name="depart" class='layui-select full-width'>
-                    <option value="">---</option>
+                <select name="dict" class='layui-select full-width'>
+                    <option value=" ">---</option>
                     {volist name="dicttypes" id="dtype"}
                     <option value="{$dtype['type']}" {if $dtype['type'] eq $dict}selected{/if}>{$dtype['type']}</option>
                     {/volist}
@@ -135,21 +124,21 @@
         <div class="layui-inline">
             <label class="layui-form-label">列表显示</label>
             <div class="layui-input-inline">
-                <input type="checkbox" name="recom"  lay-skin="switch" {if
+                <input type="checkbox" name="isgrid"  lay-skin="switch" {if
                        condition="!empty($isgrid) && intval($isgrid) eq '1' " }checked{/if}>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">表单显示</label>
             <div class="layui-input-inline">
-                <input type="checkbox" name="recom"  lay-skin="switch" {if
+                <input type="checkbox" name="isform"  lay-skin="switch" {if
                        condition="!empty($isform) && intval($isform) eq '1' " }checked{/if}>
             </div>
         </div>
     </div>
 
 
-    <input type="hidden" name="status" value='{$status|default=""}'>
+    <input type="hidden" name="table" value='{$table|default=""}'>
 
 
 

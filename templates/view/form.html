@@ -73,11 +73,11 @@
             <!--{literal}{/in}{/literal}-->
             <!--{literal}{/volist}{/literal}-->
             {elseif condition="$fieldtype eq 'textarea' " /}
-            <textarea {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} placeholder="请输入{$displayname}描述"   title="请输入{$displayname}描述" class="layui-textarea" name="{$vo['COLUMN_NAME']}">{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}</textarea>
+            <textarea {if condition="!empty($require) && $require eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} placeholder="请输入{$displayname}描述"   title="请输入{$displayname}描述" class="layui-textarea" name="{$vo['COLUMN_NAME']}">{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}</textarea>
             {elseif condition="$fieldtype eq 'password' " /}
-            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="password" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
+            <input {if condition="!empty($require) && $require eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="password" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
             {elseif condition="$fieldtype eq 'switch' " /}
-            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="checkbox" name="{$vo['COLUMN_NAME']}"  title="请输入{$displayname}" placeholder="请输入{$displayname}" lay-skin="switch"  {literal}{if condition="!empty($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) && intval($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) eq '1' "}{/literal}checked{literal}{/if}{/literal}>
+            <input {if condition="!empty($require) && $require eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="checkbox" name="{$vo['COLUMN_NAME']}"  title="请输入{$displayname}" placeholder="请输入{$displayname}" lay-skin="switch"  {literal}{if condition="!empty($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) && intval($vo.{/literal}{$vo['COLUMN_NAME']}{literal}) eq '1' "}{/literal}checked{literal}{/if}{/literal}>
             {elseif condition="$fieldtype eq 'hidden' " /}
             <input  type="hidden" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  >
             {elseif condition="$fieldtype eq 'image' " /}
@@ -101,7 +101,7 @@
                 });
             </script>
             {else/}
-            <input {if condition="!empty($required) && $required eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="text" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
+            <input {if condition="!empty($require) && $require eq 1"}required="required"{/if} {if condition="!empty($validate)"}lay-verify="{$validate}"{/if} type="text" name="{$vo['COLUMN_NAME']}" value='{literal}{$vo.{/literal}{$vo['COLUMN_NAME']}{literal}|default=""}{/literal}'  title="请输入{$displayname}" placeholder="请输入{$displayname}" class="layui-input">
             {/if}
         </div>
     </div>

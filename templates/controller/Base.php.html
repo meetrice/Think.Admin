@@ -7,14 +7,14 @@
 // +----------------------------------------------------------------------
 // | Author: Meetrice <meetrice@qq.com> <http://www.rc3cr.com>
 // +----------------------------------------------------------------------
-namespace app\admin\controller;
+namespace app\{$moduledir}\controller;
 use controller\BasicAdmin;
 use service\DataService;
 use service\NodeService;
 use service\ToolsService;
 use think\Db;
 
-    class {$tbname} extends BasicAdmin {
+    class {$classname} extends BasicAdmin {
 
     public $table = '{$tbname}';
 
@@ -26,13 +26,14 @@ use think\Db;
             {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
             {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
                 {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
+                {if condition="strlen(trim($fielddict)) gt 0"}
             ${$fielddict}array=[];
             ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
             foreach (${$fielddict}dicts as $vo) {
             ${$fielddict}array[$vo['dkey']] = $vo['dvalue'];
             }
             $this->assign('{$fielddict}dicts', ${$fielddict}array); //字典
-
+                {/if}
             {/if}
     {/volist}
         $this->title = '管理{$tbcomment}';
@@ -47,10 +48,10 @@ use think\Db;
         {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
         {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
         {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
-
+            {if condition="strlen(trim($fielddict)) gt 0"}
         ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
         $this->assign('{$fielddict}dicts', ${$fielddict}dicts); //字典
-
+            {/if}
         {/if}
     {/volist}
 
@@ -65,10 +66,10 @@ use think\Db;
     {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
     {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
     {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
-
+        {if condition="strlen(trim($fielddict)) gt 0"}
     ${$fielddict}dicts=Db::name('dict')->where('type', '{$fielddict}')->field('dkey,dvalue')->select();
     $this->assign('{$fielddict}dicts', ${$fielddict}dicts); //字典
-
+        {/if}
     {/if}
     {/volist}
         return $this->_form($this->table, 'form');
@@ -81,7 +82,7 @@ use think\Db;
     public function del() {
         if (DataService::update($this->table)) {
         $id = $this->request->post('id');
-        Db::name('{$tbname}')->where('id', $id)->delete();
+        Db::name($this->table)->where('id', $id)->delete();
         $this->success("{$tbcomment}删除成功！", '');
         }
         $this->error("{$tbcomment}删除失败，请稍候再试！");

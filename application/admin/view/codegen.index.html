@@ -18,13 +18,23 @@
             {volist name="tables" id="vo"}
             <tr>
                 <td class='list-table-check-td'>
-                    <input class="list-check-box" name="tables[]" value="<?php echo $vo[$table_k];?>" type="checkbox">
+                    <input class="list-check-box" name="tables[]" value="<?php echo $vo['TABLE_NAME'];?>" type="checkbox">
                 </td>
 
-                <td class='text-center'> <a data-open="{:url('index')}?id={$vo[$table_k]}"><?php echo $vo[$table_k];?></a></td>
+                <td class='text-center'> <a data-open="{:url('index')}?table={$vo['TABLE_NAME']}"><?php echo $vo['TABLE_NAME'];?></a></td>
                 <td class='text-center'>
-                    <a data-update="<?php echo $vo[$table_k];?>" data-field='delete'
-                       data-action='{:url("$classuri/generate")}' href="javascript:void(0)">生成</a>
+                    <?php
+if (strpos($vo['TABLE_COMMENT'], 'ex') == false) {
+  ?>
+
+
+                    <a data-update="<?php echo $vo['TABLE_NAME'];?>" data-field='delete'
+                       data-action='{:url("$classuri/generate")}' href="javascript:void(0)">
+                        生成
+                    </a>
+                    <?php
+                    }
+                    ?>
                 </td>
             </tr>
             {/volist}
@@ -38,34 +48,46 @@
 
         {if isset($info['Name'])}
 
-        <div class="form-group" style="margin-top:30px;">
-            <label class="col-md-3">表名</label>
-            <div class="col-md-9">
-                <input type="text" name="table_name" required="true"
-                       value="<?php if(isset($info['Name'])) echo $info['Name'];?>" class="form-control">
+        <form  action="{:url('savetable')}" data-auto="true" method="post">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">表名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tablename" required="true"
+                           value="<?php if(isset($info['Name'])) echo $info['Name'];?>" class="layui-input">
+                    <input type="hidden" name="oname" value="<?php if(isset($info['Name'])) echo $info['Name'];?>">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">存储引擎</label>
+                <div class="layui-input-inline">
+                    <select class="layui-select full-width" name="engine" required="true">
+                        {foreach $engine as $e}
+                        <option value="{$e}"
+                        <?php if(isset($info->Engine) && $info->Engine ==$e) echo 'selected';?> >{$e}</option>
+                        {/foreach}
+                    </select>
+
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">注释</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="comment" value="<?php if(isset($info['Comment'])) echo $info['Comment'];?>"  class="layui-input">
+                    <input type="hidden" name="ocomname" value="<?php if(isset($info['Comment'])) echo $info['Comment'];?>">
+                </div>
             </div>
         </div>
-        <div class="form-group" style="margin-top:30px;">
-            <label class="col-md-3"> 存储引擎 </label>
-            <div class="col-md-9">
-                <select class="form-control" name="engine" required="true">
-                    {foreach $engine as $e}
-                    <option value="{$e}"
-                    <?php if(isset($info->Engine) && $info->Engine ==$e) echo 'selected';?> >{$e}</option>
-                    {/foreach}
-                </select>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left: 0px;">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">修改表名</button>
             </div>
         </div>
 
 
-        <div class="form-group" style="top:30px;">
-            <label class="col-md-4"> </label>
-            <div class="col-md-8">
-                <button type="submit" class="layui-btn"> 修改</button>
-
-            </div>
-        </div>
-
+</form>
         <div style="clear:both;"></div>
         <hr/>
 
@@ -82,7 +104,7 @@
                     <th> 长度</th>
                     <th> 默认</th>
 
-                    <th width="75"> 不为空 ?</th>
+                    <th width="75">可空</th>
                     <th> 主键</th>
                     <th> 自增</th>
                     <th> 表头/Label</th>
@@ -115,16 +137,38 @@
                     <td>
                         {$column['Default']}
                     </td>
-                    <td> {if $column['Null'] =='NO'}<i class="text-success fa fa-check-circle"></i> {else/} <i
-                            class="text-danger fa fa-minus-circle"></i> {/if}
+                    <td>
+                        {if $column['Null'] =='NO'}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&null=off">
+                            <i class="text-danger fa fa-minus-circle"></i>
+                        </a>
+                        {else/}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&null=on">
+                            <i class="text-success fa fa-check-circle"></i>
+                        </a>
+                        {/if}
                     </td>
                     <td>
-                        {if $column['Key'] =='PRI'} <i class="text-success fa fa-check-circle"></i> {else/} <i
-                            class="text-danger fa fa-minus-circle"></i> {/if}
+                        {if $column['Key'] =='PRI'}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&key=off">
+                            <i class="text-success fa fa-check-circle"></i>
+                        </a>
+                        {else/}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&key=on">
+                            <i class="text-danger fa fa-minus-circle"></i>
+                        </a>
+                        {/if}
                     </td>
                     <td>
-                        {if $column['Extra'] =='auto_increment'} <i class="text-success fa fa-check-circle"></i> {else/}
-                        <i class="text-danger fa fa-minus-circle"></i> {/if}
+                        {if $column['Extra'] =='auto_increment'}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&ai=off">
+                        <i class="text-success fa fa-check-circle"></i>
+                        </a>
+                        {else/}
+                            <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&ai=on">
+                        <i class="text-danger fa fa-minus-circle"></i>
+                            </a>
+                        {/if}
                     </td>
                     <!--表头列名-->
                     {assign name="displayname" value=":json_decode($column['Comment'],true)[0]['name']"}
@@ -132,9 +176,9 @@
                     {assign name="formtype" value=":json_decode($column['Comment'],true)[0]['type']"}
                     <!--是否必填-->
                     {if condition="stripos($column['Comment'], 'require') gt 0"}
-                    {assign name="required" value=":json_decode($column['Comment'],true)[0]['require']"}
+                    {assign name="require" value=":json_decode($column['Comment'],true)[0]['require']"}
                     {else/}
-                    {assign name="required" value="0"}
+                    {assign name="require" value="0"}
                     {/if}
                     <!--验证类型-->
                     {if condition="stripos($column['Comment'], 'validate') gt 0"}
@@ -164,23 +208,42 @@
                     <td> <span class="text-explode">|</span>{$displayname}</td>
                     <td> <span class="text-explode">|</span>{$formtype}</td>
                     <td>
-                        {if $required eq 1}
-
-                        <a data-open="{:url('index')}?id={$vo[$table_k]}">{$isno[$required]}</a>
+                        {if $require eq 1}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&require=off">
+                            <i class="text-success fa fa-check-circle"></i></a>
                         {else/}
-                        <span class="text-explode">|</span>
-                        <a data-open="{:url('index')}?id={$vo[$table_k]}">{$isno[$required]}</a>
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&require=on"><i class="text-danger fa fa-minus-circle"></i></a>
                         {/if}
 
                         </td>
                     <td> {$validate}</td>
                     <td> {$dict}</td>
-                    <td> {$isno[$isgrid]}</td>
-                    <td> {$isno[$isform]}</td>
+                    <td>
+                        {if $isgrid eq 1}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&isgrid=off">
+                        <i class="text-success fa fa-check-circle"></i>
+                        </a>
+                        {else/}
+                         <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&isgrid=on">
+                        <i class="text-danger fa fa-minus-circle"></i>
+                         </a>
+                        {/if}
+                    </td>
+                    <td>
+                        {if $isform eq 1}
+                        <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&isform=off">
+                        <i class="text-success fa fa-check-circle"></i>
+                        </a>
+                        {else/}
+                            <a data-open="{:url('save')}?table={$tablename|default=''}&field={$column['Field']}&currentfield={$column['Field']}&type={$type}&length={$length}&comment={:urlencode($column['Comment'])}&isform=on">
+                        <i class="text-danger fa fa-minus-circle"></i>
+                         </a>
+                        {/if}
+                    </td>
                     <td>
 
                         <?php
-                        $info = 'field='.$column['Field'].'&type='.$type.'&lenght='.$length.'&default='.$column['Default'].'&notnull='.$column['Null'].'&key='.$column['Key'].'&ai='.$column['Extra'].'&required='.$required.'&displayname='.$displayname.'&formtype='.$formtype.'&validate='.$validate.'&dict='.$dict.'&isgrid='.$isgrid.'&isform='.$isform;
+                        $info = 'table='.$tablename.'&field='.$column['Field'].'&type='.$type.'&lenght='.$length.'&default='.$column['Default'].'&notnull='.$column['Null'].'&key='.$column['Key'].'&ai='.$column['Extra'].'&require='.$require.'&displayname='.$displayname.'&formtype='.$formtype.'&validate='.$validate.'&dict='.$dict.'&isgrid='.$isgrid.'&isform='.$isform;
 ?>
                         <a data-modal='{:url("$classuri/editcolumn")}?{$info}' href="javascript:void(0)" class="btn btn-xs btn-primary" ><i class="fa fa-edit "></i></a>
 
@@ -191,35 +254,7 @@
                 {/foreach}
 
                 {else/}
-                <tr class="clone clonedInput">
 
-                    <td><input type="text" name="fields[]" value="" class="form-control" required="true"></td>
-                    <td>
-                        <select name="types[]" class="form-control">
-                            {foreach $tbtypes as $t}
-                            <option value="{$t}">{$t}</option>
-                            {/foreach}
-                        </select>
-                    </td>
-                    <td>
-
-                        <input type="text" name="lenghts[]" value="" class="form-control"></td>
-                    <td>
-
-
-                        <input type="text" name="defaults[]" class="form-control"/>
-                    </td>
-
-                    <td><input type="checkbox" name="null[]" value="1"/></td>
-                    <td><input type="checkbox" name="key[]" value="1"/></td>
-                    <td><input type="checkbox" name="ai[]" value="1"/></td>
-                    <td>
-
-                        <a onclick=" $(this).parents('.clonedInput').remove(); return false" href="#"
-                           class="remove btn btn-xs btn-danger">-</a>
-                    </td>
-
-                </tr>
 
                 {/if}
                 </tbody>
@@ -228,6 +263,13 @@
 
         </div>
         {/if}
+        <hr />
+        <?php
+                        $newinfo = 'table='.$tablename;
+?>
+        <button class="layui-btn">
+            <i class="layui-icon">&#xe608;</i>  <a data-modal='{:url("$classuri/editcolumn")}?{$newinfo}' href="javascript:void(0)" style="color: #fff;" >添加字段</a>
+        </button>
 
     </div>
 </div>

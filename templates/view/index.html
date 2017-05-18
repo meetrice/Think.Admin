@@ -21,7 +21,14 @@
             </th>
             {volist name="tableInfoArray" id="vo"}
             {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
-            {if condition="$fieldtype neq 'hidden' "}
+            <!--是否生成表格-->
+            {if condition="stripos($vo['COLUMN_COMMENT'], 'isgrid') gt 0"}
+            {assign name="isgrid" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['isgrid']"}
+            {else/}
+            {assign name="isgrid" value=""}
+            {/if}
+
+            {if condition="$fieldtype neq 'hidden' && $isgrid eq 1"}
             <th class='text-center'>{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']} </th>
             {/if}
             {/volist}
@@ -40,7 +47,17 @@
             <!--显示数据列：如果列类型是select ,则显示字典值-->
             {volist name="tableInfoArray" id="vo"}
             {assign name="fieldtype" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['type']"}
-            {if condition="$fieldtype neq 'hidden' "}
+
+
+            <!--是否生成表格-->
+            {if condition="stripos($vo['COLUMN_COMMENT'], 'isgrid') gt 0"}
+            {assign name="isgrid" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['isgrid']"}
+            {else/}
+            {assign name="isgrid" value=""}
+            {/if}
+
+            {if condition="$fieldtype neq 'hidden' && $isgrid eq 1"}
+
                 {if condition="$fieldtype eq 'select' ||$fieldtype eq 'radio'"}
                     {assign name="fielddict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
             <td class='text-center'>
