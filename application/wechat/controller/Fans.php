@@ -16,6 +16,7 @@ namespace app\wechat\controller;
 
 use controller\BasicAdmin;
 use service\LogService;
+use service\ToolsService;
 use service\WechatService;
 use think\Db;
 
@@ -40,7 +41,7 @@ class Fans extends BasicAdmin {
      */
     public function index() {
         $this->title = '微信粉丝管理';
-        $db = Db::name($this->table)->where('is_back', '0')->order('id desc');
+        $db = Db::name($this->table)->where('is_back', '0')->order('subscribe_time desc');
         $get = $this->request->get();
         !empty($get['sex']) && $db->where('sex', $get['sex']);
         foreach (['nickname', 'country', 'province', 'city'] as $key) {
@@ -61,6 +62,7 @@ class Fans extends BasicAdmin {
     protected function _data_filter(&$list) {
         $tags = Db::name('WechatFansTags')->column('id,name');
         foreach ($list as &$vo) {
+            $vo['nickname'] = ToolsService::emojiDecode($vo['nickname']);
             $vo['tags_list'] = [];
             foreach (explode(',', $vo['tagid_list']) as $tag) {
                 if ($tag !== '' && isset($tags[$tag])) {
@@ -78,7 +80,7 @@ class Fans extends BasicAdmin {
      */
     public function back() {
         $this->title = '微信粉丝黑名单管理';
-        $db = Db::name($this->table)->where('is_back', '1')->order('id desc');
+        $db = Db::name($this->table)->where('is_back', '1')->order('subscribe_time desc');
         $get = $this->request->get();
         !empty($get['sex']) && $db->where('sex', $get['sex']);
         foreach (['nickname', 'country', 'province', 'city'] as $key) {
