@@ -141,6 +141,7 @@ class Codegen extends BasicAdmin
             "checkbox" => "checkbox",
             "switch" => "switch",
             "image" => "image",
+            "ueditor" => "ueditor",
         );
         $this->assign('fieldformtypes', $fieldformtypes);
 

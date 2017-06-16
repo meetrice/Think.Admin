@@ -18,7 +18,7 @@ use think\Controller;
 use controller\BasicAdmin;
 use service\DataService;
 use service\NodeService;
-use service\ToolsService;
+use service\StringService;
 use think\Db;
 use think\View;
 
@@ -68,7 +68,7 @@ class Index extends Controller {
                 }
 //var_dump($page_template);die;
                 $this->assign('pages', $page_template);
-                $this->assign('content', ToolsService::formatContent($row['note']));
+                $this->assign('content', StringService::formatContent($row['note']));
 
 
                 $page = $_SERVER['DOCUMENT_ROOT'].'/application/index/layouts/'.sysconf('theme').'/index.php';

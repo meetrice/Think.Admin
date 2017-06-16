@@ -304,7 +304,7 @@ define(['jquery'], function () {
             layer.open({
                 type: 1,
                 btn: false,
-                area: "900px",
+                area: ['900px', '800px'],
                 content: res,
                 maxmin: true,
                 title: title || '',
