@@ -329,6 +329,9 @@ class Codegen extends BasicAdmin
                 $viewfilename = $viewfilename.lcfirst($fixs[$x]);
             }
             $classname = ucfirst($classname);
+        }else{
+            $viewfilename = $table;
+            $classname = ucfirst($table);
         }
 
 
@@ -354,12 +357,13 @@ class Codegen extends BasicAdmin
 
 
         $listview_content = $this->fetch($template_listview);//列表视图
+
         $formview_content = $this->fetch($template_formview);//表单视图
         $formview_content = str_replace('[SELF]', '__SELF__', $formview_content);//表单视图中特殊处理
 
         $filename = basename($template_listview);
         $formfilename = basename($template_formview);
-
+//        die($filetarget . '/'.$moduledir.'/view/' . $viewfilename . '.' . $filename);
         //生成主列表视图
         if ((is_dir($filetarget) || mkdir($filetarget)) && (is_dir($filetarget . '/'.$moduledir.'/') || mkdir($filetarget . '/'.$moduledir.'/')) && (is_dir($filetarget . '/'.$moduledir.'/view') || mkdir($filetarget . '/'.$moduledir.'/view'))) {
             file_put_contents($filetarget . '/'.$moduledir.'/view/' . $viewfilename . '.' . $filename, $listview_content);

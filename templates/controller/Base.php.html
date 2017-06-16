@@ -37,7 +37,7 @@ use think\Db;
             {/if}
     {/volist}
         $this->title = '管理{$tbcomment}';
-        parent::_list($this->table);
+        return parent::_list($this->table);
     }
     /**
     * 添加

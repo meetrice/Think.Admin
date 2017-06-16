@@ -3,29 +3,27 @@
 {literal}{block name="content"}{/literal}
 <form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="[SELF]" data-auto="true" method="post">
 {volist name="tableInfoArray" id="vo"}
-    <!--字段列头显示名称-->
+    {// 字段列头显示名称 }
     {assign name="displayname" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['name']"}
-    <!--是否必填-->
+    {// 是否必填 }
     {if condition="stripos($vo['COLUMN_COMMENT'], 'require') gt 0"}
         {assign name="required" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['require']"}
     {else/}
         {assign name="required" value="0"}
     {/if}
-    <!--验证类型-->
+    {// 验证类型 }
     {if condition="stripos($vo['COLUMN_COMMENT'], 'validate') gt 0"}
     {assign name="validate" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['validate']"}
     {else/}
     {assign name="validate" value=""}
     {/if}
-    <!--字典名称-->
+    {//  字典名称}
     {if condition="stripos($vo['COLUMN_COMMENT'], 'dict') gt 0"}
     {assign name="dict" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['dict']"}
     {else/}
     {assign name="dict" value=""}
     {/if}
-
-
-    <!--是否生成表单-->
+    {// 是否生成表单 }
     {if condition="stripos($vo['COLUMN_COMMENT'], 'isform') gt 0"}
     {assign name="isform" value=":json_decode($vo['COLUMN_COMMENT'],true)[0]['isform']"}
     {else/}
@@ -41,8 +39,7 @@
         <label class="layui-form-label">{:json_decode($vo['COLUMN_COMMENT'],true)[0]['name']}  </label>
 
         <div class="layui-input-block">
-
-            <!--如果是下拉选框-->
+            {// 如果是下拉选框 }
             {if condition="$fieldtype eq 'select' "}
             <select name="{$vo['COLUMN_NAME']}" class='layui-select full-width'>
                 <option value="">---</option>

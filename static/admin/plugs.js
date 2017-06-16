@@ -304,8 +304,9 @@ define(['jquery'], function () {
             layer.open({
                 type: 1,
                 btn: false,
-                area: "800px",
+                area: "900px",
                 content: res,
+                maxmin: true,
                 title: title || '',
                 success: function (dom, index) {
                     // 此窗口完成时需要自动关闭
