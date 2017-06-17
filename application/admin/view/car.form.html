@@ -1,0 +1,193 @@
+{extend name="extra@admin/content"}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="__SELF__" data-auto="true" method="post">
+
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">姓名  </label>
+
+        <div class="layui-input-block">
+            
+                        <input lay-verify=" " type="text" name="name" value='{$vo.name|default=""}'  title="请输入姓名" placeholder="请输入姓名" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">性别  </label>
+
+        <div class="layui-input-block">
+            
+                        <!--{volist name="sexdicts" id="vod"}-->
+            <!--{eq name='vod.dkey|intval=###' value='$vo.gender|default=-1|intval=###'}-->
+            <input type="radio" name="gender" value="{$vod['dkey']}" title="{$vod['dvalue']}" checked>
+            <!--{else}-->
+            <input type="radio" name="gender" value="{$vod['dkey']}" title="{$vod['dvalue']}">
+            <!--{/eq}-->
+            <!--{/volist}-->
+            <!--如果是checkbox选框-->
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">密码  </label>
+
+        <div class="layui-input-block">
+            
+                        <input lay-verify=" " type="text" name="pwd" value='{$vo.pwd|default=""}'  title="请输入密码" placeholder="请输入密码" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">部门  </label>
+
+        <div class="layui-input-block">
+            
+                        <select name="depart" class='layui-select full-width'>
+                <option value="">---</option>
+                <!--{volist name="departdicts" id="vod"}-->
+                <!--{eq name='vod.dkey|intval=###' value='$vo.depart|default=-1|intval=###'}-->
+                <option selected value='{$vod['dkey']}'>{$vod['dvalue']}</option>
+                <!--{else}-->
+                <option  value='{$vod['dkey']}'>{$vod['dvalue']}</option>
+                <!--{/eq}-->
+                <!--{/volist}-->
+            </select>
+            <!--如果是radio选框-->
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">比例  </label>
+
+        <div class="layui-input-block">
+            
+                        <!--{volist name="interestdicts" id="vod"}-->
+            <!--{in name='vod.dkey|intval=###' value='$vo.interest|default=-1|explode=",",###'}-->
+            <input type="checkbox" name="interest[{$vod['dkey']}]" value="{$vod['dkey']}" title="{$vod['dvalue']}" checked>
+            <!--{else}-->
+            <input type="checkbox" name="interest[{$vod['dkey']}]" value="{$vod['dkey']}" title="{$vod['dvalue']}">
+            <!--{/in}-->
+            <!--{/volist}-->
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">详情  </label>
+
+        <div class="layui-input-block">
+            
+                        <textarea lay-verify=" " placeholder="请输入详情描述"   title="请输入详情描述" class="layui-textarea" name="intro">{$vo.intro|default=""}</textarea>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">网址  </label>
+
+        <div class="layui-input-block">
+            
+                        <input lay-verify="url" type="text" name="www" value='{$vo.www|default=""}'  title="请输入网址" placeholder="请输入网址" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">头像  </label>
+
+        <div class="layui-input-block">
+            
+            
+            <div class="col-md-12">
+                <div class="col-xs-3" style="width:160px">
+                    <div class="uploadimage">
+                        <input value="http://ma.yaodianqudao.com/static/plugs/uploader/theme/image.png" type="hidden" name="logo">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <a data-file="one" data-type="jpg,png,jpeg" data-field="logo" class="layui-btn"><i class="layui-icon">&#xe608;</i>上传图片</a>
+                </div>
+            </div>
+            <script>
+                 {if condition="!empty($vo.logo)"}
+                $('.uploadimage').css("background-image","url('{$vo.logo}')");
+                {/if}
+                $('body').on('change', '.uploadimage input', function () {
+                    $(this).parent('.uploadimage').css('background-image', 'url(' + this.value + ')');
+                });
+            </script>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">推荐  </label>
+
+        <div class="layui-input-block">
+            
+                        <input lay-verify=" " type="checkbox" name="recom"  title="请输入推荐" placeholder="请输入推荐" lay-skin="switch"  {if condition="!empty($vo.recom) && intval($vo.recom) eq '1' "}checked{/if}>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="display:none;">
+
+        <label class="layui-form-label">排序  </label>
+
+        <div class="layui-input-block">
+            
+                        <input  type="hidden" name="sort" value='{$vo.sort|default=""}'  >
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+
+        <label class="layui-form-label">价格  </label>
+
+        <div class="layui-input-block">
+            
+                        <input  type="text" name="price" value='{$vo.price|default=""}'  title="请输入价格" placeholder="请输入价格" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" lay-submit>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script>
+    form.render();
+</script>
+{/block}

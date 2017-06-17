@@ -1,0 +1,115 @@
+{extend name="extra@admin/content"}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="__SELF__" data-auto="true" method="post">
+
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="title" value='{$vo.title|default=""}'  title="请输入标题" placeholder="请输入标题" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">别名</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="alias" value='{$vo.alias|default=""}'  title="请输入别名" placeholder="请输入别名" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+                 
+                <textarea  placeholder="请输入内容描述"   title="请输入内容描述" class="layui-textarea" name="note">{$vo.note|default=""}</textarea>
+
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">允许客人</label>
+        <div class="layui-input-block">
+                  
+                <input  type="checkbox" name="allow_guest"  title="请输入允许客人" placeholder="请输入允许客人" lay-skin="switch"  {if condition="!empty($vo.allow_guest) && intval($vo.allow_guest) eq '1' "}checked{/if}>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">模板</label>
+        <div class="layui-input-block">
+                    
+                <select name="template" class='layui-select full-width'>
+                    <option value="">---</option>
+                    <!--{volist name="interestdicts" id="vod"}-->
+                    <!--{eq name='vod.dkey|intval=###' value='$vo.template|default=-1|intval=###'}-->
+                    <option selected value='{$vod['dkey']}'>{$vod['dvalue']}</option>
+                    <!--{else}-->
+                    <option  value='{$vod['dkey']}'>{$vod['dvalue']}</option>
+                    <!--{/eq}-->
+                    <!--{/volist}-->
+                </select>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">metakey</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="metakey" value='{$vo.metakey|default=""}'  title="请输入metakey" placeholder="请输入metakey" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">metadesc</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="metadesc" value='{$vo.metadesc|default=""}'  title="请输入metadesc" placeholder="请输入metadesc" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">标签</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="labels" value='{$vo.labels|default=""}'  title="请输入标签" placeholder="请输入标签" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" lay-submit>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script>
+    form.render();
+
+        require(['ueditor'], function () {
+        /*! 实例富文本编辑器  */
+        var editor;
+        editor = window.createEditor('[name="note"]', 'basic');
+        editor.ready(function () {
+            var $form = $('form[name="note"]'), $body = $('body');
+            $form.validate();
+        });
+    });
+        </script>
+{/block}

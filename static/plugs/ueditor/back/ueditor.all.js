@@ -9946,9 +9946,10 @@ var LocalStorage = UE.LocalStorage = (function () {
 ///plugin 编辑器默认的过滤转换机制
 
 UE.plugins['defaultfilter'] = function () {
+    return;   //在这里添加return，不执行下面的格式化
     var me = this;
     me.setOpt({
-        'allowDivTransToP':true,
+        'allowDivTransToP':false,
         'disabledTableInTable':true
     });
     //默认的过滤处理

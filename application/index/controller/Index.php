@@ -30,29 +30,31 @@ use think\View;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/04/05 10:38
  */
-class Index extends Controller {
+class Index extends Controller
+{
 
     /**
      * 网站入口
      */
-    public function index() {
+    public function index()
+    {
 //        $this->redirect('@admin');
 //        $page = $this->request->get(1);
+
+
         $page = $this->request->path();
 
 
+//如果网址后台有路径slug
+        if ($page != '/') :
 
-        if($page !='/') :
+
+            $alise = $this->request->get('alias');
 
 
-            var_dump('etwstw');die;
-
-        else :
-            $sql = Db::name('CmsPages')->where('default', '1')->order('sort asc,id asc')->select();
-//            var_dump($sql);die;
-//            $sql = DB::table('tb_pages')->where('default',1)->get();
-            if(count($sql)>=1)
-            {
+            $sql = Db::name('CmsPages')->where('alias', $alise)->order('sort asc,id asc')->select();
+            trace(Db::name('CmsPages')->getLastSql(),'debug');
+            if (count($sql) >= 1) {
                 $row = $sql[0];
                 $this->assign('pageTitle', $row['title']);
                 $this->assign('pageNote', $row['note']);
@@ -61,19 +63,52 @@ class Index extends Controller {
                 $this->assign('pageMetadesc', $row['metadesc']);
                 $this->assign('filename', $row['filename']);
 
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].'/application/index/layouts/'.sysconf('theme').'/template/'.$row['filename'].'.template.php') &&  $row['filename'] !='' )               {
-                    $page_template = $_SERVER['DOCUMENT_ROOT'].'/application/index/layouts/'.sysconf('theme').'/template/'.$row['filename'];
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html') && $row['pagetype'] != '') {
+                    $page = $_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html';
                 } else {
-                    $page_template = $_SERVER['DOCUMENT_ROOT'].'/application/index/layouts/'.sysconf('theme').'/template/page.blade.php';
+                    $page = $_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html';
                 }
-//var_dump($page_template);die;
-                $this->assign('pages', $page_template);
+                trace($page,'debug');
+                $this->assign('content', StringService::formatContent($row['note']));
+
+                return view($page);
+//                return $this->fetch($page);
+
+            } else {
+
+                return ' No Default page set up !';
+            }
+
+
+//如果网址后面没有路径,则默认选index
+        else :
+
+
+
+            $sql = Db::name('CmsPages')->where('default', '1')->order('sort asc,id asc')->select();
+//            var_dump($sql);die;
+//            $sql = DB::table('tb_pages')->where('default',1)->get();
+            if (count($sql) >= 1) {
+                $row = $sql[0];
+                $this->assign('pageTitle', $row['title']);
+                $this->assign('pageNote', $row['note']);
+                $this->assign('breadcrumb', 'inactive');
+                $this->assign('pageMetakey', $row['metakey']);
+                $this->assign('pageMetadesc', $row['metadesc']);
+                $this->assign('themepath', $_SERVER['DOCUMENT_ROOT'] . '/application/index/layouts/' . sysconf('theme'));
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html') && $row['pagetype'] != '') {
+                    $page = $_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html';
+                } else {
+                    $page = $_SERVER['DOCUMENT_ROOT'] . '/application/index/view/' . sysconf('theme') . '.'.$row['pagetype'].'.index.html';
+                }
+                trace($page,'debug');
+//                $this->assign('pages', $page_template);
                 $this->assign('content', StringService::formatContent($row['note']));
 
 
-                $page = $_SERVER['DOCUMENT_ROOT'].'/application/index/layouts/'.sysconf('theme').'/index.php';
-//                return view($page,$this->data);
-                return $this->fetch($page);
+//                $page = $_SERVER['DOCUMENT_ROOT'] . '/application/index/layouts/' . sysconf('theme') . '/index.html';
+                return view($page);
+//                return $this->fetch($page);
 
             } else {
 
@@ -81,9 +116,6 @@ class Index extends Controller {
             }
 
         endif;
-
-
-
 
 
     }

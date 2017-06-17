@@ -1,0 +1,10 @@
+{
+	"name"		:"BootEnt",
+	"folder"	:"bootent",
+	"author"	:"meetrice",
+	"template"	:{
+					"Full Page"			: "fullpage",
+					"Left Sidebar"		: "pagesidebar",
+					"Backend Template"	: "backend"
+				}
+}

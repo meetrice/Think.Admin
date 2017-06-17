@@ -1,0 +1,474 @@
+{extend name='extra@admin/content'}
+
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+    <button data-modal='{:url("$classuri/add")}' data-title="添加" class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加</button>
+    <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除</button>
+</div>
+{/block}
+
+    {block name="content"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <input type="hidden" value="resort" name="action"/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+            </th>
+            <th class='list-table-sort-td'>
+                <button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
+            </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>公众号名称 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>公众号原始ID </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>微信号 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>头像地址 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>TOKEN </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>省 </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>市 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>公众号邮箱 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>微信粉丝 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>分类ID </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>分类名 </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>默认首页模版ID </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>首页模版名 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>列表模版ID </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>列表模版名 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>内容模版ID </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>内容模版名 </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>公众账号用户名 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>公众账号密码 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>是否绑定成功 </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>商城模板id </th>
+                        <!--是否生成表格-->
+                        <th class='text-center'>商城模板模板名称 </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>网页授权token </th>
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <!--是否生成表格-->
+                        <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+            </td>
+            <td class='list-table-sort-td'>
+                <input name="_{$vo.id}" value="{$vo.sort}" class="list-sort-input"/>
+            </td>
+            <!--显示数据列：如果列类型是select ,则显示字典值-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.wxname|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.wxid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.weixin|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.headerpic|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.token|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.province|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.city|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.qq|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.wxfans|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.typeid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.typename|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tpltypeid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tpltypename|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tpllistid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tpllistname|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tplcontentid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.tplcontentname|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.wxun|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.wxpwd|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.binok|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.shoptpltypeid|default=''}</td>
+                
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.shoptpltypename|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center'>{$vo.web_access_token|default=''}</td>
+                
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+            
+
+            <!--是否生成表格-->
+                        <td class='text-center nowrap'>
+
+
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' href="javascript:void(0)">编辑</a>
+                {/if}
+
+
+                {if $vo.status eq 1 and auth("$classuri/forbid")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status' data-value='0'data-action='{:url("$classuri/forbid")}' href="javascript:void(0)">禁用</a>
+                {elseif auth("$classuri/resume")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status' data-value='1' data-action='{:url("$classuri/resume")}' href="javascript:void(0)">启用</a>
+                {/if}
+
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}' href="javascript:void(0)">删除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

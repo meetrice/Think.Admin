@@ -1,0 +1,35 @@
+{extend name="default/layout/main"}
+
+{block name='body'}
+<section id="content">
+
+    <div class="content-wrap">
+
+        <div class="container clearfix">
+
+            <!-- Post Content
+            ============================================= -->
+            <div class="postcontent nobottommargin col_last clearfix">
+                <?php echo htmlspecialchars_decode($content); ?>
+            </div><!-- .postcontent end -->
+
+            <!-- Sidebar
+            ============================================= -->
+            <div class="sidebar nobottommargin clearfix">
+                <div class="sidebar-widgets-wrap">
+                    leftmenu
+
+                </div>
+            </div><!-- .sidebar end -->
+
+        </div>
+
+    </div>
+
+
+</section>
+
+{/block}
+
+
+
