@@ -1,4 +1,4 @@
-{extend name='extra@admin/content'}
+{extend name='erp@erp/content'}
 
 {block name="button"}
 <div class="nowrap pull-right" style="margin-top:10px">
@@ -7,80 +7,23 @@
 </div>
 {/block}
 
-    {block name="content"}
-<form onsubmit="return false;" data-auto="true" method="post">
-    <input type="hidden" value="resort" name="action"/>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th class='list-table-check-td'>
-                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
-            </th>
-            <th class='list-table-sort-td'>
-                <button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
-            </th>
-                        <th class='text-center'>姓名 </th>
-                        <th class='text-center'>性别 </th>
-                        <th class='text-center'>密码 </th>
-                        <th class='text-center'>部门 </th>
-                        <th class='text-center'>比例 </th>
-                        <th class='text-center'>详情 </th>
-                        <th class='text-center'>头像 </th>
-                        <th class='text-center'>推荐 </th>
-                        <th class='text-center'>价格 </th>
-                        <th class='text-center'>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {foreach $list as $key=>$vo}
-        <tr>
-            <td class='list-table-check-td'>
-                <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
-            </td>
-            <td class='list-table-sort-td'>
-                <input name="_{$vo.id}" value="{$vo.sort}" class="list-sort-input"/>
-            </td>
-            <!--显示数据列：如果列类型是select ,则显示字典值-->
-                        <td class='text-center'>{$vo.name|default=''}</td>
-                            <td class='text-center'>
-                {$sexdicts[$vo.gender]|default=''}
-            </td>
-                            <td class='text-center'>{$vo.pwd|default=''}</td>
-                            <td class='text-center'>
-                {$departdicts[$vo.depart]|default=''}
-            </td>
-                            <td class='text-center'>{$vo.interest|default=''}</td>
-                            <td class='text-center'>{$vo.intro|default=''}</td>
-                            <td class='text-center'>{$vo.logo|default=''}</td>
-                            <td class='text-center'>{$vo.recom|default=''}</td>
-                            <td class='text-center'>{$vo.price|default=''}</td>
-                            <td class='text-center nowrap'>
+{block name="content"}
+<div class="demo-container">
+    <div id="gridContainer"></div>
+</div>
+{/block}
+{block name='script'}
+<script>
+
+    require(['devexpress'], function () {
 
 
-                {if auth("$classuri/edit")}
-                <span class="text-explode">|</span>
-                <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' href="javascript:void(0)">编辑</a>
-                {/if}
+    $("#gridContainer").dxDataGrid({
+        dataSource: "../../../../data/customers.json",
+        columns: ["姓名", "性别", "密码", "部门", "比例"]
+    });
 
 
-                {if $vo.status eq 1 and auth("$classuri/forbid")}
-                <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='status' data-value='0'data-action='{:url("$classuri/forbid")}' href="javascript:void(0)">禁用</a>
-                {elseif auth("$classuri/resume")}
-                <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='status' data-value='1' data-action='{:url("$classuri/resume")}' href="javascript:void(0)">启用</a>
-                {/if}
-
-                {if auth("$classuri/del")}
-                <span class="text-explode">|</span>
-                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}' href="javascript:void(0)">删除</a>
-                {/if}
-
-            </td>
-        </tr>
-        {/foreach}
-        </tbody>
-    </table>
-    {if isset($page)}<p>{$page}</p>{/if}
-</form>
+    });
+</script>
 {/block}

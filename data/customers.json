@@ -1,0 +1,121 @@
+[{
+    "ID": 1,
+    "姓名": "Premier Buy",
+    "性别": "7601 Penn Avenue South",
+    "密码": "Richfield",
+    "部门": "Minnesota",
+    "比例": 55423,
+    "Phone": "(612) 291-1000",
+    "Fax": "(612) 291-2001",
+    "Website": "http://www.nowebsitepremierbuy.com"
+}, {
+    "ID": 2,
+    "姓名": "ElectrixMax",
+    "性别": "263 Shuman Blvd",
+    "密码": "Naperville",
+    "部门": "Illinois",
+    "比例": 60563,
+    "Phone": "(630) 438-7800",
+    "Fax": "(630) 438-7801",
+    "Website": "http://www.nowebsiteelectrixmax.com"
+}, {
+    "ID": 3,
+    "姓名": "Video Emporium",
+    "性别": "1201 Elm Street",
+    "密码": "Dallas",
+    "部门": "Texas",
+    "比例": 75270,
+    "Phone": "(214) 854-3000",
+    "Fax": "(214) 854-3001",
+    "Website": "http://www.nowebsitevideoemporium.com"
+}, {
+    "ID": 4,
+    "姓名": "Screen Shop",
+    "性别": "1000 Lowes Blvd",
+    "密码": "Mooresville",
+    "部门": "North Carolina",
+    "比例": 28117,
+    "Phone": "(800) 445-6937",
+    "Fax": "(800) 445-6938",
+    "Website": "http://www.nowebsitescreenshop.com"
+}, {
+    "ID": 5,
+    "姓名": "Braeburn",
+    "性别": "1 Infinite Loop",
+    "密码": "Cupertino",
+    "部门": "California",
+    "比例": 95014,
+    "Phone": "(408) 996-1010",
+    "Fax": "(408) 996-1012",
+    "Website": "http://www.nowebsitebraeburn.com"
+}, {
+    "ID": 6,
+    "姓名": "PriceCo",
+    "性别": "30 Hunter Lane",
+    "密码": "Camp Hill",
+    "部门": "Pennsylvania",
+    "比例": 17011,
+    "Phone": "(717) 761-2633",
+    "Fax": "(717) 761-2334",
+    "Website": "http://www.nowebsitepriceco.com"
+}, {
+    "ID": 7,
+    "姓名": "Ultimate Gadget",
+    "性别": "1557 Watson Blvd",
+    "密码": "Warner Robbins",
+    "部门": "Georgia",
+    "比例": 31093,
+    "Phone": "(995) 623-6785",
+    "Fax": "(995) 623-6786",
+    "Website": "http://www.nowebsiteultimategadget.com"
+}, {
+    "ID": 8,
+    "姓名": "EZ Stop",
+    "性别": "618 Michillinda Ave.",
+    "密码": "Arcadia",
+    "部门": "California",
+    "比例": 91007,
+    "Phone": "(626) 265-8632",
+    "Fax": "(626) 265-8633",
+    "Website": "http://www.nowebsiteezstop.com"
+}, {
+    "ID": 9,
+    "姓名": "Clicker",
+    "性别": "1100 W. Artesia Blvd.",
+    "密码": "Compton",
+    "部门": "California",
+    "比例": 90220,
+    "Phone": "(310) 884-9000",
+    "Fax": "(310) 884-9001",
+    "Website": "http://www.nowebsiteclicker.com"
+}, {
+    "ID": 10,
+    "姓名": "Store of America",
+    "性别": "2401 Utah Ave. South",
+    "密码": "Seattle",
+    "部门": "Washington",
+    "比例": 98134,
+    "Phone": "(206) 447-1575",
+    "Fax": "(206) 447-1576",
+    "Website": "http://www.nowebsiteamerica.com"
+}, {
+    "ID": 11,
+    "姓名": "Zone Toys",
+    "性别": "1945 S Cienega Boulevard",
+    "密码": "Los Angeles",
+    "部门": "California",
+    "比例": 90034,
+    "Phone": "(310) 237-5642",
+    "Fax": "(310) 237-5643",
+    "Website": "http://www.nowebsitezonetoys.com"
+}, {
+    "ID": 12,
+    "姓名": "ACME",
+    "性别": "2525 E El Segundo Blvd",
+    "密码": "El Segundo",
+    "部门": "California",
+    "比例": 90245,
+    "Phone": "(310) 536-0611",
+    "Fax": "(310) 536-0612",
+    "Website": "http://www.nowebsiteacme.com"
+}]
