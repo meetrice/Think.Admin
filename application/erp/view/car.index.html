@@ -19,8 +19,19 @@
 
 
     $("#gridContainer").dxDataGrid({
-        dataSource: "../../../../data/customers.json",
-        columns: ["姓名", "性别", "密码", "部门", "比例"]
+        dataSource: "http://mipcms.rc3cr.com/admin/users?keywords=&page=1&limit=5",
+        paging: {
+            pageSize: 10
+        },
+        pager: {
+            showPageSizeSelector: true,
+            allowedPageSizes: [5, 10, 20],
+            showInfo: true
+        },
+        columns: [{
+            dataField: "username",
+            caption: "用户名"
+        }, "realname","s_name"]
     });
 
 

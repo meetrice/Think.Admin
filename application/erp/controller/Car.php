@@ -13,6 +13,7 @@ use service\DataService;
 use service\NodeService;
 use service\ToolsService;
 use think\Db;
+use think\controller\Rest;
 
     class Car extends BasicAdmin {
 
@@ -41,8 +42,13 @@ use think\Db;
             }
             $this->assign('interestdicts', $interestarray); //字典
                         $this->title = '管理汽车';
+
         return parent::_list($this->table);
     }
+        public function rest() {
+            $sexdicts=Db::name('erp_car')->select();
+            echo json_encode($sexdicts);
+        }
     /**
     * 添加
     */
