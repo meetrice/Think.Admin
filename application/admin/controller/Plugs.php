@@ -16,7 +16,7 @@ namespace app\admin\controller;
 
 use controller\BasicAdmin;
 use service\FileService;
-use think\View;
+use think\Db;
 
 /**
  * 插件助手控制器
@@ -25,7 +25,8 @@ use think\View;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/02/21
  */
-class Plugs extends BasicAdmin {
+class Plugs extends BasicAdmin
+{
 
     /**
      * 默认检查用户登录状态
@@ -41,33 +42,31 @@ class Plugs extends BasicAdmin {
 
     /**
      * 文件上传
-     * @return View
+     * @return \think\response\View
      */
-    public function upfile() {
-        $types = $this->request->get('type', 'jpg,png');
-        $mode = $this->request->get('mode', 'one');
-        $this->assign('mode', $mode);
-        $this->assign('types', $types);
+    public function upfile()
+    {
         if (!in_array(($uptype = $this->request->get('uptype')), ['local', 'qiniu'])) {
             $uptype = sysconf('storage_type');
         }
-        $this->assign('uptype', $uptype);
+        $types = $this->request->get('type', 'jpg,png');
+        $mode = $this->request->get('mode', 'one');
         $this->assign('mimes', FileService::getFileMine($types));
         $this->assign('field', $this->request->get('field', 'file'));
-        return view();
+        return view('', ['mode' => $mode, 'types' => $types, 'uptype' => $uptype]);
     }
 
     /**
      * 通用文件上传
-     * @return string
+     * @return \think\response\Json
      */
-    public function upload() {
+    public function upload()
+    {
         if ($this->request->isPost()) {
             $md5s = str_split($this->request->post('md5'), 16);
             if (($info = $this->request->file('file')->move('static' . DS . 'upload' . DS . $md5s[0], $md5s[1], true))) {
                 $filename = join('/', $md5s) . '.' . $info->getExtension();
-                $site_url = FileService::getFileUrl($filename, 'local');
-                if ($site_url) {
+                if (($site_url = FileService::getFileUrl($filename, 'local'))) {
                     return json(['data' => ['site_url' => $site_url], 'code' => 'SUCCESS']);
                 }
             }
@@ -78,7 +77,8 @@ class Plugs extends BasicAdmin {
     /**
      * 文件状态检查
      */
-    public function upstate() {
+    public function upstate()
+    {
         $post = $this->request->post();
         $filename = join('/', str_split($post['md5'], 16)) . '.' . pathinfo($post['filename'], PATHINFO_EXTENSION);
         // 检查文件是否已上传
@@ -99,9 +99,7 @@ class Plugs extends BasicAdmin {
                 $time = time() + 3600;
                 $policyText = [
                     'expiration' => date('Y-m-d', $time) . 'T' . date('H:i:s', $time) . '.000Z',
-                    'conditions' => [
-                        ['content-length-range', 0, 1048576000]
-                    ]
+                    'conditions' => [['content-length-range', 0, 1048576000]],
                 ];
                 $config['policy'] = base64_encode(json_encode($policyText));
                 $config['server'] = FileService::getUploadOssUrl();
@@ -117,7 +115,8 @@ class Plugs extends BasicAdmin {
      * @param string $key
      * @return string
      */
-    protected function _getQiniuToken($key) {
+    protected function _getQiniuToken($key)
+    {
         $accessKey = sysconf('storage_qiniu_access_key');
         $secretKey = sysconf('storage_qiniu_secret_key');
         $bucket = sysconf('storage_qiniu_bucket');
@@ -133,11 +132,23 @@ class Plugs extends BasicAdmin {
     }
 
     /**
-     * 字体图标
+     * 字体图标选择器
+     * @return \think\response\View
      */
-    public function icon() {
+    public function icon()
+    {
         $this->assign('field', $this->request->get('field', 'icon'));
         return view();
+    }
+
+    /**
+     * 区域数据
+     * @return \think\response\Json
+     */
+    public function region()
+    {
+        $list = Db::name('DataRegion')->where('status', '1')->column('code,name');
+        return json($list);
     }
 
 }

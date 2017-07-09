@@ -1,0 +1,113 @@
+{extend name="extra@admin/content"}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="__SELF__" data-auto="true" method="post">
+
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+                 <input lay-verify=" " type="text" name="ad_id" value='{$vo.ad_id|default=""}'  title="请输入ID" placeholder="请输入ID" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">广告名</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="ad_name" value='{$vo.ad_name|default=""}'  title="请输入广告名" placeholder="请输入广告名" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+                 <input lay-verify=" " type="text" name="image" value='{$vo.image|default=""}'  title="请输入图片" placeholder="请输入图片" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">链接</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="ad_link" value='{$vo.ad_link|default=""}'  title="请输入链接" placeholder="请输入链接" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="ad_info" value='{$vo.ad_info|default=""}'  title="请输入描述" placeholder="请输入描述" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">商品</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_id" value='{$vo.goods_id|default=""}'  title="请输入商品" placeholder="请输入商品" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">激活</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="enabled" value='{$vo.enabled|default=""}'  title="请输入激活" placeholder="请输入激活" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="type" value='{$vo.type|default=""}'  title="请输入分类" placeholder="请输入分类" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">推荐</label>
+        <div class="layui-input-block">
+                  
+                <input lay-verify=" " type="checkbox" name="recom"  title="请输入推荐" placeholder="请输入推荐" lay-skin="switch"  {if condition="!empty($vo.recom) && intval($vo.recom) eq '1' "}checked{/if}>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="display:none;">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+                   
+                <input  type="hidden" name="sort" value='{$vo.sort|default=""}'  >
+                    </div>
+    </div>
+
+
+    
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" lay-submit>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script>
+    form.render();
+
+    </script>
+{/block}

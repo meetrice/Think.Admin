@@ -23,7 +23,8 @@ use think\Request;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/04/25 11:59
  */
-class FilterView {
+class FilterView
+{
 
     /**
      * 当前请求对象
@@ -35,7 +36,8 @@ class FilterView {
      * 行为入口
      * @param $params
      */
-    public function run(&$params) {
+    public function run(&$params)
+    {
         $this->request = Request::instance();
         $appRoot = $this->request->root(true);
         $replace = [
@@ -51,7 +53,8 @@ class FilterView {
      * 百度统计实现代码
      * @param $params
      */
-    public function baidu(&$params) {
+    public function baidu(&$params)
+    {
         if (($key = sysconf('tongji_baidu_key'))) {
             $script = <<<SCRIPT
         <script>

@@ -1,0 +1,80 @@
+{extend name='extra@admin/content'}
+
+{block name="button"}
+<div class="nowrap pull-right" style="margin-top:10px">
+    <button data-modal='{:url("$classuri/add")}' data-title="添加汽车" class='layui-btn layui-btn-small'><i class='fa fa-plus'></i> 添加汽车</button>
+    <button data-update data-field='delete' data-action='{:url("$classuri/del")}' class='layui-btn layui-btn-small layui-btn-danger'><i class='fa fa-remove'></i> 删除汽车</button>
+</div>
+{/block}
+
+    {block name="content"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <input type="hidden" value="resort" name="action"/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+            </th>
+            <th class='list-table-sort-td'>
+                <button type="submit" class="layui-btn layui-btn-normal layui-btn-mini">排 序</button>
+            </th>
+                        <th class='text-center'>姓名 </th>
+                        <th class='text-center'>商品名 </th>
+                        <th class='text-center'>密码 </th>
+                        <th class='text-center'>销量 </th>
+                        <th class='text-center'>需要积分 </th>
+                        <th class='text-center'>库存 </th>
+                        <th class='text-center'>等级 </th>
+                        <th class='text-center'>推荐 </th>
+                        <th class='text-center'>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $key=>$vo}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+            </td>
+            <td class='list-table-sort-td'>
+                <input name="_{$vo.id}" value="{$vo.sort}" class="list-sort-input"/>
+            </td>
+            <!--显示数据列：如果列类型是select ,则显示字典值-->
+                        <td class='text-center'>{$vo.point_id|default=''}</td>
+                            <td class='text-center'>{$vo.goods_name|default=''}</td>
+                            <td class='text-center'>{$vo.info_img|default=''}</td>
+                            <td class='text-center'>{$vo.goods_sale_num|default=''}</td>
+                            <td class='text-center'>{$vo.goods_point|default=''}</td>
+                            <td class='text-center'>{$vo.goods_num|default=''}</td>
+                            <td class='text-center'>{$vo.goods_level|default=''}</td>
+                            <td class='text-center'>{$vo.recom|default=''}</td>
+                            <td class='text-center nowrap'>
+
+
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' href="javascript:void(0)">编辑</a>
+                {/if}
+
+
+                {if $vo.status eq 1 and auth("$classuri/forbid")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status' data-value='0'data-action='{:url("$classuri/forbid")}' href="javascript:void(0)">禁用</a>
+                {elseif auth("$classuri/resume")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='status' data-value='1' data-action='{:url("$classuri/resume")}' href="javascript:void(0)">启用</a>
+                {/if}
+
+                {if auth("$classuri/del")}
+                <span class="text-explode">|</span>
+                <a data-update="{$vo.id}" data-field='delete' data-action='{:url("$classuri/del")}' href="javascript:void(0)">删除</a>
+                {/if}
+
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

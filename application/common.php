@@ -24,7 +24,8 @@ use think\Db;
  * @param bool $replace
  * @param string|null $pathname
  */
-function p($data, $replace = false, $pathname = NULL) {
+function p($data, $replace = false, $pathname = null)
+{
     is_null($pathname) && $pathname = RUNTIME_PATH . date('Ymd') . '.txt';
     $str = (is_string($data) ? $data : (is_array($data) || is_object($data)) ? print_r($data, true) : var_export($data, true)) . "\n";
     $replace ? file_put_contents($pathname, $str) : file_put_contents($pathname, $str, FILE_APPEND);
@@ -35,8 +36,9 @@ function p($data, $replace = false, $pathname = NULL) {
  * @param string $type
  * @return \Wechat\WechatReceive|\Wechat\WechatUser|\Wechat\WechatPay|\Wechat\WechatScript|\Wechat\WechatOauth|\Wechat\WechatMenu
  */
-function & load_wechat($type = '') {
-    static $wechat = array();
+function & load_wechat($type = '')
+{
+    static $wechat = [];
     $index = md5(strtolower($type));
     if (!isset($wechat[$index])) {
         $config = [
@@ -56,24 +58,32 @@ function & load_wechat($type = '') {
 }
 
 /**
- * 安全URL编码
- * @param array|string $data
- * @return string
- */
-function encode($data) {
-    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(serialize($data)));
-}
-
-/**
- * 安全URL解码
+ * UTF8字符串加密
  * @param string $string
  * @return string
  */
-function decode($string) {
-    $data = str_replace(['-', '_'], ['+', '/'], $string);
-    $mod4 = strlen($data) % 4;
-    !!$mod4 && $data .= substr('====', $mod4);
-    return unserialize(base64_decode($data));
+function encode($string)
+{
+    $chars = '';
+    $len = strlen($string = iconv('utf-8', 'gbk', $string));
+    for ($i = 0; $i < $len; $i++) {
+        $chars .= str_pad(base_convert(ord($string[$i]), 10, 36), 2, 0, 0);
+    }
+    return strtoupper($chars);
+}
+
+/**
+ * UTF8字符串解密
+ * @param string $string
+ * @return string
+ */
+function decode($string)
+{
+    $chars = '';
+    foreach (str_split($string, 2) as $char) {
+        $chars .= chr(intval(base_convert($char, 36, 10)));
+    }
+    return iconv('gbk', 'utf-8', $chars);
 }
 
 /**
@@ -81,7 +91,8 @@ function decode($string) {
  * @param string $node
  * @return bool
  */
-function auth($node) {
+function auth($node)
+{
     return NodeService::checkAuthNode($node);
 }
 
@@ -91,7 +102,8 @@ function auth($node) {
  * @param bool $value 默认是false为获取值，否则为更新
  * @return string|bool
  */
-function sysconf($name, $value = false) {
+function sysconf($name, $value = false)
+{
     static $config = [];
     if ($value !== false) {
         $config = [];
@@ -111,7 +123,8 @@ function sysconf($name, $value = false) {
  */
 if (!function_exists("array_column")) {
 
-    function array_column(array &$rows, $column_key, $index_key = null) {
+    function array_column(array &$rows, $column_key, $index_key = null)
+    {
         $data = [];
         foreach ($rows as $row) {
             if (empty($index_key)) {

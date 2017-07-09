@@ -1,0 +1,113 @@
+{extend name="extra@admin/content"}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' action="__SELF__" data-auto="true" method="post">
+
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+                 <input lay-verify=" " type="text" name="point_id" value='{$vo.point_id|default=""}'  title="请输入姓名" placeholder="请输入姓名" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">商品名</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_name" value='{$vo.goods_name|default=""}'  title="请输入商品名" placeholder="请输入商品名" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+                 <input lay-verify=" " type="text" name="info_img" value='{$vo.info_img|default=""}'  title="请输入密码" placeholder="请输入密码" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">销量</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_sale_num" value='{$vo.goods_sale_num|default=""}'  title="请输入销量" placeholder="请输入销量" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">需要积分</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_point" value='{$vo.goods_point|default=""}'  title="请输入需要积分" placeholder="请输入需要积分" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">库存</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_num" value='{$vo.goods_num|default=""}'  title="请输入库存" placeholder="请输入库存" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">商品描述</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_desc" value='{$vo.goods_desc|default=""}'  title="请输入商品描述" placeholder="请输入商品描述" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">等级</label>
+        <div class="layui-input-block">
+                 <input  type="text" name="goods_level" value='{$vo.goods_level|default=""}'  title="请输入等级" placeholder="请输入等级" class="layui-input">
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="">
+        <label class="layui-form-label">推荐</label>
+        <div class="layui-input-block">
+                  
+                <input lay-verify=" " type="checkbox" name="recom"  title="请输入推荐" placeholder="请输入推荐" lay-skin="switch"  {if condition="!empty($vo.recom) && intval($vo.recom) eq '1' "}checked{/if}>
+                    </div>
+    </div>
+
+
+    
+    <div class="layui-form-item" style="display:none;">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+                   
+                <input  type="hidden" name="sort" value='{$vo.sort|default=""}'  >
+                    </div>
+    </div>
+
+
+    
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        {if isset($vo['id'])}<input type='hidden' value='{$vo.id}' name='id'/>{/if}
+        <button class="layui-btn" lay-submit>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+
+</form>
+{/block}
+{block name="script"}
+<script>
+    form.render();
+
+    </script>
+{/block}

@@ -23,19 +23,22 @@ use think\Db;
  * @author Anyon <zoujingli@qq.com>
  * @date 2017/05/08 11:28
  */
-class NodeService {
+class NodeService
+{
 
     /**
      * 应用用户权限节点
      * @return bool
      */
-    public static function applyAuthNode() {
+    public static function applyAuthNode()
+    {
         cache('need_access_node', null);
         if (($userid = session('user.id'))) {
             session('user', Db::name('SystemUser')->where('id', $userid)->find());
         }
         if (($authorize = session('user.authorize'))) {
-            $authorizeids = Db::name('SystemAuth')->where('id', 'in', explode(',', $authorize))->where('status', '1')->column('id');
+            $where = ['id' => ['in', explode(',', $authorize)], 'status' => '1'];
+            $authorizeids = Db::name('SystemAuth')->where($where)->column('id');
             if (empty($authorizeids)) {
                 return session('user.nodes', []);
             }
@@ -49,7 +52,8 @@ class NodeService {
      * 获取授权节点
      * @return array
      */
-    public static function getAuthNode() {
+    public static function getAuthNode()
+    {
         $nodes = cache('need_access_node');
         if (empty($nodes)) {
             $nodes = Db::name('SystemNode')->where('is_auth', '1')->column('node');
@@ -63,7 +67,8 @@ class NodeService {
      * @param string $node 节点
      * @return bool
      */
-    public static function checkAuthNode($node) {
+    public static function checkAuthNode($node)
+    {
         list($module, $controller, $action) = explode('/', str_replace(['?', '=', '&'], '/', $node . '///'));
         $auth_node = strtolower(trim("{$module}/{$controller}/{$action}", '/'));
         if (session('user.username') === 'admin' || stripos($node, 'admin/index') === 0) {
@@ -72,14 +77,15 @@ class NodeService {
         if (!in_array($auth_node, self::getAuthNode())) {
             return true;
         }
-        return in_array($auth_node, (array) session('user.nodes'));
+        return in_array($auth_node, (array)session('user.nodes'));
     }
 
     /**
      * 获取系统代码节点
      * @return array
      */
-    public static function get() {
+    public static function get()
+    {
         $alias = [];
         foreach (Db::name('SystemNode')->select() as $vo) {
             $alias["{$vo['node']}"] = $vo;
@@ -112,7 +118,8 @@ class NodeService {
      * @param array $nodes 额外数据
      * @return array
      */
-    public static function getNodeTree($path, $nodes = []) {
+    public static function getNodeTree($path, $nodes = [])
+    {
         foreach (self::_getFilePaths($path) as $vo) {
             if (!preg_match('|/(\w+)/controller/(\w+)|', str_replace(DS, '/', $vo), $matches) || count($matches) !== 3) {
                 continue;
@@ -137,7 +144,8 @@ class NodeService {
      * @param string $ext 文件后缀
      * @return array
      */
-    private static function _getFilePaths($path, $data = [], $ext = 'php') {
+    private static function _getFilePaths($path, $data = [], $ext = 'php')
+    {
         foreach (scandir($path) as $dir) {
             if ($dir[0] === '.') {
                 continue;

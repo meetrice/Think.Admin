@@ -18,8 +18,8 @@ var baseUrl = (function () {
 
 // RequireJs 配置参数
 require.config({
-    baseUrl: baseUrl,
     waitSeconds: 0,
+    baseUrl: baseUrl,
     map: {'*': {css: baseUrl + '../plugs/require/require.css.js'}},
     paths: {
         // 自定义插件（源码自创建或已修改源码）
@@ -33,6 +33,7 @@ require.config({
         // 开源插件（未修改源码）
         'pace': ['../plugs/jquery/pace.min'],
         'json': ['../plugs/jquery/json2.min'],
+        'citys': ['../plugs/juqyer/jquery.citys'],
         'print': ['../plugs/jquery/jquery.PrintArea'],
         'base64': ['../plugs/jquery/base64.min'],
         'jquery': ['../plugs/jquery/jquery.min'],
@@ -46,6 +47,7 @@ require.config({
 
     },
     shim: {
+        'citys': {deps: ['jquery']},
         'layui': {deps: ['jquery']},
         'laydate': {deps: ['jquery']},
         'bootstrap': {deps: ['jquery']},
@@ -65,7 +67,6 @@ require.config({
 
 window.WEB_SOCKET_SWF_LOCATION = baseUrl + "../plugs/socket/WebSocketMain.swf";
 window.UEDITOR_HOME_URL = (window.ROOT_URL ? window.ROOT_URL + '/static/' : baseUrl) + 'plugs/ueditor/';
-window.LAYDATE_PATH = baseUrl + '../plugs/layui/laydate/';
 
 // UI框架初始化
 require(['pace', 'jquery', 'layui', 'bootstrap', 'jquery.cookies'], function () {
